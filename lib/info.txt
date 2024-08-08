@@ -1,0 +1,39 @@
+authenitication
+user profile
+homepage
+Explore
+Discover
+Library
+ 8 Aug 2024
+App Idea: "Moodify"
+Purpose:
+Moodify leverages Spotify APIs to analyze a user’s listening history, favorite tracks, and playlists. It then suggests personalized playlists based on their current mood, activities, or specific genres they want to explore.
+
+Key Features:
+
+Mood-Based Playlists:
+
+Users select their current mood (e.g., happy, sad, relaxed, energetic).
+The app curates a playlist that matches this mood, using Spotify’s audio features like tempo, energy, and valence.
+Daily Mood Tracker:
+
+The app tracks daily listening habits and moods, offering insights into how music affects the user’s mood over time.
+Users can see a "Mood Calendar" where they can view how their musical tastes and moods have changed over days or weeks.
+Activity-Based Playlists:
+
+Users can choose an activity (e.g., working out, studying, relaxing).
+The app suggests a playlist tailored to that activity, considering tempo, intensity, and genre.
+Discover New Music:
+
+The app suggests new artists or tracks outside the user’s usual listening habits, based on their mood and activity preferences.
+Users can also explore music that other users with similar moods or activities are listening to.
+Social Sharing:
+
+Users can share their mood-based playlists on social media or with friends.
+The app can create collaborative mood-based playlists with friends who are in a similar mood or doing the same activity.
+Integration with Spotify:
+
+The app uses Spotify's Web API to fetch user data, such as top tracks, recent playlists, and favorite genres.
+The app can directly add recommended songs or playlists to the user’s Spotify account.
+Problem Solved:
+Many users struggle to find the right music for their mood or activity. Moodify simplifies this by providing personalized, mood-based playlists, helping users discover new music that resonates with them emotionally or enhances their activities. It adds an emotional layer to music discovery that many apps don't focus on.
