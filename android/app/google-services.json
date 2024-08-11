@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "880449295345",
+    "project_id": "tmoose-c345f",
+    "storage_bucket": "tmoose-c345f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880449295345:android:997d57b77bdd49ee2daa50",
+        "android_client_info": {
+          "package_name": "com.company.tmoose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDat1O44Q9l8ME_LneKd58owPZ6j8AcKQE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
