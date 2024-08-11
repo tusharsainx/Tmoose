@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:tmoose/authentication/repository/auth_repository.dart';
+import 'package:tmoose/helpers/common_headers.dart';
+import 'package:tmoose/helpers/logger.dart';
 
 enum MethodType { GET, POST, PUT, DELETE }
 
@@ -22,46 +25,36 @@ class NetworkRequester implements NetworkRequesterBase {
 
   @override
   Future request(String baseUrl, String path, String methodType,
-      Map<String, dynamic> headers, Map<String, dynamic>? data) async {
+      Map<String, dynamic>? headers, Map<String, dynamic>? data) async {
     try {
+      final headersForApiCall = CommonHeaders().getDefaultHeaders(headers);
       var response = await _dio.request(
         "$baseUrl$path",
         options: Options(
           method: methodType,
-          headers: headers,
+          headers: headersForApiCall,
         ),
-         data: data,
+        data: data,
       );
 
       if (response.statusCode == 200) {
-        print(json.encode(response.data));
-      } else {
-        print(response.statusMessage);
-      }
-      return response;
+        logger.i(json.encode(response.data));
+        return response.data;
+      } else if (response.statusCode == 401) {
+        final response =
+            await AuthenticationRepository().getAccessTokenViaRefreshToken(
+          baseUrl: baseUrl,
+          path: path,
+          prevData: data,
+          prevHeaders: headers,
+          methodType: methodType,
+        );
+        if (response.statusCode == 200) {
+          return response.data;
+        } else {}
+      } else {}
     } catch (e) {
       return {};
     }
   }
-
-  Future generateAccessToken() async {
-    try {
-      var headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      };
-      var data = {
-        'grant_type': 'client_credentials',
-        'client_id': '9434fb590d3841d786bdb22d7c7fdb59',
-        'client_secret': 'd85f058d4fcf451790cd06998598261e'
-      };
-      final response = await request("https://accounts.spotify.com",
-          "/api/token", MethodType.POST.name, headers, data);
-      print(response.toString());
-      return response["access_token"];
-    } catch (e) {
-      print("error");
-    }
-  }
-
-  Future handleResponse(Response response) async {}
 }
