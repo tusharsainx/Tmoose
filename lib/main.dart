@@ -47,7 +47,7 @@ class Startup extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'T-Moose',
       getPages: AppPages.pages,
-      initialRoute: AppRoutes.auth,
+      initialRoute: AppRoutes.home,
       theme: ThemeData.dark(),
     );
   }

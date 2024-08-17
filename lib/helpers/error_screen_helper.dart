@@ -69,6 +69,7 @@ class ErrorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black,
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: ElevatedButton(

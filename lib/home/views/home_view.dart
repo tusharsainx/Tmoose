@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:tmoose/authentication/repository/auth_repository.dart';
-import 'package:tmoose/helpers/session_manager_helper.dart';
 import 'package:tmoose/home/controllers/home_controller.dart';
-import 'package:tmoose/network_requester/network_request_helper.dart';
+import 'package:tmoose/moodify_home/view/moodify_home_view.dart';
+import 'package:tmoose/user/views/user_profile_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -11,17 +11,42 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-            onPressed: () async {
-              await AuthenticationRepository().requestUserAuthorization();
-            },
-            child: Column(
-              children: [
-                const Text("Test"),
-              ],
-            )),
+      backgroundColor: Colors.black,
+      body: PageView(
+        controller: controller.pageController,
+        onPageChanged: (index) {
+          controller.selectedIndex.value = index;
+        },
+        children: [
+          MoodifyHomeView(),
+          const UserProfileView(),
+        ],
       ),
+      bottomNavigationBar: Obx(() {
+        return BottomNavigationBar(
+          backgroundColor: Colors.black,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.music),
+              label: "Moodify",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.user),
+              label: "Profile",
+            ),
+          ],
+          currentIndex: controller.selectedIndex.value,
+          selectedItemColor: const Color(0xff87CEEB),
+          onTap: (index) {
+            controller.selectedIndex.value = index;
+            controller.pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+        );
+      }),
     );
   }
 }
