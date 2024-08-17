@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:tmoose/authentication/models/auth_models.dart';
 import 'package:tmoose/helpers/constants.dart';
 import 'package:tmoose/helpers/logger.dart';
 import 'package:tmoose/network_requester/apis.dart';
 import 'package:tmoose/network_requester/network_request_helper.dart';
+import 'package:tmoose/routes/app_routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// This class will be responsible for authentication of user
@@ -17,7 +19,7 @@ class AuthenticationRepository {
   factory AuthenticationRepository() {
     return _instance ??= AuthenticationRepository._internal();
   }
-
+  final NetworkRequester _networkRequester = NetworkRequester();
   String _generateCodeVerifier() {
     final random = Random.secure();
     final values = List<int>.generate(64, (e) => random.nextInt(256));
@@ -91,7 +93,7 @@ class AuthenticationRepository {
         refreshToken: null,
       ),
     );
-    final tokenResponse = await NetworkRequester().request(
+    final tokenResponse = await _networkRequester.request(
       Api.authBaseUrl,
       Api.authBaseUrlPath,
       MethodType.POST.name,
@@ -127,7 +129,7 @@ class AuthenticationRepository {
       "grant_type": 'refresh_token',
       "refresh_token": refreshToken,
     };
-    final tokenResponse = await NetworkRequester().request(
+    final tokenResponse = await _networkRequester.request(
       Api.authBaseUrl,
       Api.authBaseUrlPath,
       MethodType.POST.name,
@@ -135,7 +137,7 @@ class AuthenticationRepository {
       data,
     );
     await _saveTokens(tokenResponse);
-    return await NetworkRequester().request(
+    return await _networkRequester.request(
       baseUrl,
       path,
       methodType,

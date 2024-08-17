@@ -57,7 +57,7 @@ class AuthView extends GetView<AuthController> {
           ),
         ),
       ),
-      backgroundColor: const Color(0xff141416),
+      backgroundColor: Colors.black,
       body: const Padding(
         padding: EdgeInsets.all(20.0),
         child: Center(

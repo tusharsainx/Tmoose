@@ -1,13 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeController extends GetxController {
-  final selectedIndex = 0.obs;
-  final pageController = PageController();
-
+class ArtistViewController extends GetxController {
   @override
   void onInit() {
+    // TODO: implement onInit
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
   }
 
   @override
