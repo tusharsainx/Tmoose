@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
@@ -40,12 +41,18 @@ class UserSpotifyProfileView extends StatelessWidget {
                 width: 10,
               ),
               const Text(
-                "Spotify profile",
+                "Spotify",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(width: 10),
+              const Icon(
+                FontAwesomeIcons.arrowUpRightFromSquare,
+                color: Color(0xff87CEEB),
+                size: 18,
+              )
             ],
           ),
         ),

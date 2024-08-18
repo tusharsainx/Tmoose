@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/helpers/logger.dart';
 import 'package:tmoose/user/helper/enums.dart';
-import 'package:tmoose/user/models/artist_model.dart';
-import 'package:tmoose/user/models/track_model.dart';
+import 'package:tmoose/artists/models/artist_model.dart';
+import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/models/user_profile_model.dart';
 import 'package:tmoose/user/repository/user_profile_repository.dart';
 
@@ -14,8 +14,8 @@ class UserProfileController extends GetxController {
   final choosenTimeRange = TimeRange.short_term.obs;
   final scrollController = ScrollController();
   final isScrolledSpecificHeight = false.obs;
-  List<ArtistModel>? topArtists;
-  List<TrackModel>? topTracks;
+  UserTopArtistsModel? topArtists;
+  UserTopTracksModel? topTracks;
   UserProfileModel? userProfileModel;
   CurrentPlayingTrackModel? currentPlayingTrackModel;
   RecentlyPlayedTracksModel? recentlyPlayedTracksModel;
@@ -73,14 +73,8 @@ class UserProfileController extends GetxController {
 
   @override
   void onClose() {
-    // TODO: implement onClose
+    scrollController.dispose();
     super.onClose();
-  }
-
-  @override
-  void onReady() {
-    // TODO: implement onReady
-    super.onReady();
   }
 
   Future fetchTopArtists(
@@ -105,7 +99,7 @@ class UserProfileController extends GetxController {
   Future fetchCurrentlyPlayingTrack() async {
     currentPlayingTrackModel =
         await _userProfileRepository.fetchCurrentlyPlayingTrack();
-    if (currentPlayingTrackModel?.albumSpotifyLink == null &&
+    if (currentPlayingTrackModel?.album == null &&
         currentPlayingTrackModel?.artists == null &&
         currentPlayingTrackModel?.backgroundImage == null &&
         currentPlayingTrackModel?.trackName == null) {
@@ -114,7 +108,7 @@ class UserProfileController extends GetxController {
       isAnySongCurrentlyPlaying.value = true;
     }
     logger.i(
-        "current playing model: ${currentPlayingTrackModel?.albumSpotifyLink}");
+        "current playing model: ${currentPlayingTrackModel?.album?.albumName}");
   }
 
   Future fetchUserProfile() async {

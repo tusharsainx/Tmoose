@@ -1,8 +1,8 @@
 import 'package:tmoose/helpers/logger.dart';
 import 'package:tmoose/network_requester/apis.dart';
 import 'package:tmoose/network_requester/network_request_helper.dart';
-import 'package:tmoose/user/models/artist_model.dart';
-import 'package:tmoose/user/models/track_model.dart';
+import 'package:tmoose/artists/models/artist_model.dart';
+import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/models/user_profile_model.dart';
 
 class UserProfileRepository {
@@ -22,7 +22,7 @@ class UserProfileRepository {
     }
   }
 
-  Future<List<ArtistModel>?> fetchTopArtists({
+  Future<UserTopArtistsModel> fetchTopArtists({
     required String timeRange,
     required int items,
   }) async {
@@ -34,14 +34,14 @@ class UserProfileRepository {
         null,
         null,
       );
-      TopArtistsModel.instance.fromJson(topArtistsResponse);
-      return TopArtistsModel.instance.returnArtists;
+
+      return UserTopArtistsModel.fromJson(topArtistsResponse);
     } catch (e) {
-      return TopArtistsModel.instance.returnArtists;
+      return UserTopArtistsModel();
     }
   }
 
-  Future<List<TrackModel>?> fetchTopTracks({
+  Future<UserTopTracksModel> fetchTopTracks({
     required String timeRange,
     required int items,
   }) async {
@@ -53,10 +53,9 @@ class UserProfileRepository {
         null,
         null,
       );
-      TopTracksModel.instance.fromJson(topTracksResponse);
-      return TopTracksModel.instance.returnTracks;
+      return UserTopTracksModel.fromJson(topTracksResponse);
     } catch (e) {
-      return TopTracksModel.instance.returnTracks;
+      return UserTopTracksModel();
     }
   }
 

@@ -32,7 +32,7 @@ class TopArtistsView extends StatelessWidget {
           height: 150, // Adjust height as needed
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: controller.topArtists?.length ?? 0,
+            itemCount: controller.topArtists?.artists?.length ?? 0,
             itemBuilder: (context, index) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -41,7 +41,8 @@ class TopArtistsView extends StatelessWidget {
                   SizedBox(
                     height: 100,
                     child: CachedNetworkImage(
-                      imageUrl: controller.topArtists?[index].imageUrl ?? "",
+                      imageUrl:
+                          controller.topArtists?.artists?[index].imageUrl ?? "",
                       imageBuilder: (context, imageProvider) => Container(
                         height: 100,
                         width: 100,
@@ -62,7 +63,7 @@ class TopArtistsView extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: Text(
-                      "${index + 1}. ${controller.topArtists?[index].artistName}",
+                      "${index + 1}. ${controller.topArtists?.artists?[index].artistName}",
                       style: const TextStyle(fontSize: 14),
                       maxLines: 1,
                       overflow: TextOverflow.fade,

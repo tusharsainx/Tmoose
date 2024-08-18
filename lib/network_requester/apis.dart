@@ -11,4 +11,19 @@ class Api {
   static const topTracks = "/v1/me/top/tracks";
   static const currentPlayingTracks = "/v1/me/player/currently-playing";
   static const recentlyPlayedTracks = "/v1/me/player/recently-played";
+
+  //artists endpoints
+  static const getArtistInfo = "/v1/artists";
+  static const albums = "/albums";
+  static const artisttopTracks = "/top-tracks";
+  static const relatedArtists = "/related-artists";
+
+  //tracks endpoints
+  static const trackInfo = "/v1/tracks";
+  static const audioFeatures = "/v1/audio-features";
+  static const trackRecomendations = "/v1/recommendations";
+
+  //available genres
+  static const availableGenresForRecommendations =
+      "/v1/recommendations/available-genre-seeds";
 }
