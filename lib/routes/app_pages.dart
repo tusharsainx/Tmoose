@@ -5,6 +5,8 @@ import 'package:tmoose/authentication/views/auth_view.dart';
 import 'package:tmoose/home/bindings/home_binding.dart';
 import 'package:tmoose/home/views/home_view.dart';
 import 'package:tmoose/routes/app_routes.dart';
+import 'package:tmoose/tracks/binding/track_view_binding.dart';
+import 'package:tmoose/tracks/view/tracks_view.dart';
 
 class AppPages {
   static List<GetPage> pages = [
@@ -18,6 +20,11 @@ class AppPages {
       name: AppRoutes.auth,
       page: () => const AuthView(),
       binding: AuthBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.track,
+      page: () => const TrackPage(),
+      binding: TrackPageBinding(),
     ),
   ];
 }

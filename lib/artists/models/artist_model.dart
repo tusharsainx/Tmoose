@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:tmoose/helpers/logger.dart';
-
 class ArtistModelBase {
   String? artistId;
   String? artistName;
@@ -14,10 +10,13 @@ class ArtistModelBase {
     this.artistSpotifyLink,
   });
   factory ArtistModelBase.fromJson(Map<String, dynamic>? json) {
+    final id = json?["id"];
+    final name = json?["name"];
+    final link = json?["external_urls"]?["spotify"];
     return ArtistModelBase(
-      artistId: json?["id"],
-      artistName: json?["name"],
-      artistSpotifyLink: json?["external_urls"]?["spotify"],
+      artistId: id,
+      artistName: name,
+      artistSpotifyLink: link,
     );
   }
 }
@@ -57,27 +56,36 @@ class ArtistModel extends ArtistModelBase {
   }
 }
 
-class TopArtistsModel {
-  static TopArtistsModel? _instance;
-  TopArtistsModel._internal();
-  static TopArtistsModel get instance =>
-      _instance ??= TopArtistsModel._internal();
-
+class UserTopArtistsModel {
   List<ArtistModel>? artists;
 
-  List<ArtistModel>? get returnArtists {
-    return artists;
-  }
+  UserTopArtistsModel({this.artists});
 
-  void fromJson(Map<String, dynamic>? json) {
+  factory UserTopArtistsModel.fromJson(Map<String, dynamic>? json) {
     final artists = <ArtistModel>[];
     final items = json?["items"];
-    if (items != null) {
-      for (int i = 0; i < items.length; i++) {
-        artists.add(ArtistModel.fromJson(items[i]));
-      }
+    if (items == null) return UserTopArtistsModel();
+
+    for (int i = 0; i < items.length; i++) {
+      artists.add(ArtistModel.fromJson(items[i]));
     }
-    this.artists = artists;
-    return;
+    return UserTopArtistsModel(artists: artists);
+  }
+}
+
+class ArtistRelatedArtistsModel {
+  List<ArtistModel>? artists;
+
+  ArtistRelatedArtistsModel({this.artists});
+
+  factory ArtistRelatedArtistsModel.fromJson(Map<String, dynamic>? json) {
+    final artists = <ArtistModel>[];
+    final items = json?["artists"];
+    if (items == null) return ArtistRelatedArtistsModel();
+
+    for (int i = 0; i < items.length; i++) {
+      artists.add(ArtistModel.fromJson(items[i]));
+    }
+    return ArtistRelatedArtistsModel(artists: artists);
   }
 }
