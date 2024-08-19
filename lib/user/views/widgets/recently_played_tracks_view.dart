@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:tmoose/routes/app_routes.dart';
+import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
 
 class RecentlyPlayedTracksView extends StatelessWidget {
@@ -35,71 +37,88 @@ class RecentlyPlayedTracksView extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return SizedBox(
-                height: 50,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                      child: CachedNetworkImage(
-                        imageUrl: controller.recentlyPlayedTracksModel
-                                ?.tracks?[index].backgroundImage ??
-                            "",
-                        imageBuilder: (context, imageProvider) {
-                          return Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
+              return GestureDetector(
+                onTap: () {
+                  Get.toNamed(AppRoutes.track,
+                      arguments: (controller
+                              .recentlyPlayedTracksModel?.tracks?[index]) ??
+                          TrackModel());
+                },
+                child: SizedBox(
+                  height: 50,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                        child: CachedNetworkImage(
+                          imageUrl: controller.recentlyPlayedTracksModel
+                                  ?.tracks?[index].backgroundImage ??
+                              "",
+                          imageBuilder: (context, imageProvider) {
+                            return Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          controller.recentlyPlayedTracksModel?.tracks?[index]
-                                  .trackName ??
-                              "",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          controller.recentlyPlayedTracksModel?.tracks?[index]
-                                  .artists?[0].artistName ??
-                              "",
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.clock,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          controller.songAgoTime(controller
-                                  .recentlyPlayedTracksModel
-                                  ?.tracks?[index]
-                                  .playedAt ??
-                              ""),
-                          style: const TextStyle(
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: Get.width * 0.65,
+                            child: Text(
+                              controller.recentlyPlayedTracksModel
+                                      ?.tracks?[index].trackName ??
+                                  "",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                            ),
+                          ),
+                          SizedBox(
+                            width: Get.width * 0.65,
+                            child: Text(
+                              controller.recentlyPlayedTracksModel
+                                      ?.tracks?[index].artists?[0].artistName ??
+                                  "",
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Icon(
+                            FontAwesomeIcons.clock,
                             color: Colors.grey,
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                          Text(
+                            controller.songAgoTime(controller
+                                    .recentlyPlayedTracksModel
+                                    ?.tracks?[index]
+                                    .playedAt ??
+                                ""),
+                            style: const TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },

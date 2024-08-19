@@ -30,7 +30,7 @@ class RedirectUriListener {
   }
 
   static void _navigationToHome() {
-    Get.toNamed(AppRoutes.home);
+    Get.offAllNamed(AppRoutes.home);
   }
 
   static void dispose() {

@@ -38,7 +38,7 @@ class UserProfileController extends GetxController {
   Future<void> init() async {
     isDataLoading(true);
     await initTracksAndArtists(
-      timeRange: TimeRange.short_term.name,
+      timeRange: choosenTimeRange.value.name,
       items: 10,
     );
     await fetchUserProfile();
