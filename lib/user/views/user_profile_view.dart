@@ -30,83 +30,93 @@ class UserProfileView extends StatelessWidget {
         }
       },
       child: Scaffold(
-        bottomNavigationBar: ColoredBox(
-            color: Colors.black,
-            child: Padding(
+        bottomNavigationBar: Obx(() {
+          if (!controller.isDataLoading.value) {
+            return ColoredBox(
+              color: Colors.black,
+              child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: Obx(() {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          if (controller.choosenTimeRange.value !=
-                              TimeRange.short_term) {
-                            controller.choosenTimeRange.value =
-                                TimeRange.short_term;
-                            await controller.changeTimeOfSearch(
-                              items: 10,
-                            );
-                          }
-                        },
-                        child: Text(
-                          "4 weeks",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: controller.choosenTimeRange.value ==
-                                    TimeRange.short_term
-                                ? const Color(0xff87CEEB)
-                                : Colors.white,
+                child: Obx(
+                  () {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            if (controller.choosenTimeRange.value !=
+                                TimeRange.short_term) {
+                              controller.choosenTimeRange.value =
+                                  TimeRange.short_term;
+                              await controller.changeTimeOfSearch(
+                                items: 10,
+                              );
+                            }
+                          },
+                          child: Text(
+                            "4 weeks",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: controller.choosenTimeRange.value ==
+                                      TimeRange.short_term
+                                  ? const Color(0xff87CEEB)
+                                  : Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          if (controller.choosenTimeRange.value !=
-                              TimeRange.medium_term) {
-                            controller.choosenTimeRange.value =
-                                TimeRange.medium_term;
-                            await controller.changeTimeOfSearch(
-                              items: 10,
-                            );
-                          }
-                        },
-                        child: Text(
-                          "6 months",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: controller.choosenTimeRange.value ==
-                                    TimeRange.medium_term
-                                ? const Color(0xff87CEEB)
-                                : Colors.white,
+                        GestureDetector(
+                          onTap: () async {
+                            if (controller.choosenTimeRange.value !=
+                                TimeRange.medium_term) {
+                              controller.choosenTimeRange.value =
+                                  TimeRange.medium_term;
+                              await controller.changeTimeOfSearch(
+                                items: 10,
+                              );
+                            }
+                          },
+                          child: Text(
+                            "6 months",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: controller.choosenTimeRange.value ==
+                                      TimeRange.medium_term
+                                  ? const Color(0xff87CEEB)
+                                  : Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          if (controller.choosenTimeRange.value !=
-                              TimeRange.long_term) {
-                            controller.choosenTimeRange.value =
-                                TimeRange.long_term;
-                            await controller.changeTimeOfSearch(
-                              items: 10,
-                            );
-                          }
-                        },
-                        child: Text(
-                          "1 year",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: controller.choosenTimeRange.value ==
-                                    TimeRange.long_term
-                                ? const Color(0xff87CEEB)
-                                : Colors.white,
+                        GestureDetector(
+                          onTap: () async {
+                            if (controller.choosenTimeRange.value !=
+                                TimeRange.long_term) {
+                              controller.choosenTimeRange.value =
+                                  TimeRange.long_term;
+                              await controller.changeTimeOfSearch(
+                                items: 10,
+                              );
+                            }
+                          },
+                          child: Text(
+                            "1 year",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: controller.choosenTimeRange.value ==
+                                      TimeRange.long_term
+                                  ? const Color(0xff87CEEB)
+                                  : Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                }))),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            );
+          } else {
+            return const SizedBox();
+          }
+        }),
         backgroundColor: Colors.black,
         body: Obx(
           () {
