@@ -68,6 +68,36 @@ class HorizontalListViewCircleShimmer extends StatelessWidget {
   }
 }
 
+class VerticalListViewShimmer extends StatelessWidget {
+  final double height;
+
+  const VerticalListViewShimmer({
+    super.key,
+    required this.height,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      child: ListView.separated(
+          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return Shimmer.fromColors(
+              baseColor: const Color(0xFF424242),
+              highlightColor: const Color(0xFF616161),
+              child: Container(
+                height: height,
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                ),
+              ),
+            );
+          }),
+    );
+  }
+}
+
 class FullDeviceWidthShimmer extends StatelessWidget {
   final double height;
   const FullDeviceWidthShimmer({

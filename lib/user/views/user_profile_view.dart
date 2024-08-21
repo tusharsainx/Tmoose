@@ -48,7 +48,7 @@ class UserProfileView extends StatelessWidget {
                               controller.choosenTimeRange.value =
                                   TimeRange.short_term;
                               await controller.changeTimeOfSearch(
-                                items: 10,
+                                items: 50,
                               );
                             }
                           },
@@ -70,7 +70,7 @@ class UserProfileView extends StatelessWidget {
                               controller.choosenTimeRange.value =
                                   TimeRange.medium_term;
                               await controller.changeTimeOfSearch(
-                                items: 10,
+                                items: 50,
                               );
                             }
                           },
@@ -92,7 +92,7 @@ class UserProfileView extends StatelessWidget {
                               controller.choosenTimeRange.value =
                                   TimeRange.long_term;
                               await controller.changeTimeOfSearch(
-                                items: 10,
+                                items: 50,
                               );
                             }
                           },

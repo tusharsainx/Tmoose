@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
 
@@ -15,16 +17,23 @@ class TopArtistsView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               "Top artists",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Text(
-              "More",
-              style: TextStyle(fontSize: 14, color: Color(0xff87CEEB)),
+            GestureDetector(
+              onTap: () {
+                Get.to(() => const InfoAggregatorView(
+                      isUserTopArtists: true,
+                    ));
+              },
+              child: const Text(
+                "View more",
+                style: TextStyle(fontSize: 14, color: Color(0xff87CEEB)),
+              ),
             ),
           ],
         ),
@@ -33,7 +42,9 @@ class TopArtistsView extends StatelessWidget {
           height: 150, // Adjust height as needed
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: controller.topArtists?.artists?.length ?? 0,
+            itemCount: (controller.topArtists?.artists?.length ?? 0) > 10
+                ? 10
+                : (controller.topArtists?.artists?.length ?? 0),
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
@@ -44,23 +55,24 @@ class TopArtistsView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  SizedBox(
-                    height: 100,
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          controller.topArtists?.artists?[index].imageUrl ?? "",
-                      imageBuilder: (context, imageProvider) => Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xff87CEEB),
-                          ),
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
+                    SizedBox(
+                      height: 100,
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            controller.topArtists?.artists?[index].imageUrl ??
+                                "",
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0xff87CEEB),
+                            ),
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
