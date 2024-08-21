@@ -31,22 +31,22 @@ class CurrentPlayingTrackView extends StatelessWidget {
                 SizedBox(
                   height: 50,
                   child: CachedNetworkImage(
-                    imageUrl:
-                        controller.currentPlayingTrackModel?.backgroundImage ??
-                            "",
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
+                  imageUrl:
+                      controller.currentPlayingTrackModel?.backgroundImage ??
+                          "",
+                  imageBuilder: (context, imageProvider) {
+                    return Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
+                ),
                 ),
                 const SizedBox(width: 10),
                 Column(

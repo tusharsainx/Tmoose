@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
 
 class TopArtistsView extends StatelessWidget {
@@ -34,10 +35,15 @@ class TopArtistsView extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: controller.topArtists?.artists?.length ?? 0,
             itemBuilder: (context, index) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+              return GestureDetector(
+                onTap: () {
+                  Get.toNamed(AppRoutes.artist,
+                      arguments: controller.topArtists?.artists?[index]);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                   SizedBox(
                     height: 100,
                     child: CachedNetworkImage(
@@ -55,21 +61,22 @@ class TopArtistsView extends StatelessWidget {
                             image: imageProvider,
                             fit: BoxFit.cover,
                           ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: 100,
-                    child: Text(
-                      "${index + 1}. ${controller.topArtists?.artists?[index].artistName}",
-                      style: const TextStyle(fontSize: 14),
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: 100,
+                      child: Text(
+                        "${index + 1}. ${controller.topArtists?.artists?[index].artistName}",
+                        style: const TextStyle(fontSize: 14),
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             },
             separatorBuilder: (context, index) {

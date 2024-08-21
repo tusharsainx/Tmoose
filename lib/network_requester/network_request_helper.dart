@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:tmoose/authentication/repository/auth_repository.dart';
 import 'package:tmoose/helpers/common_headers.dart';
 import 'package:tmoose/helpers/logger.dart';
+import 'package:tmoose/network_requester/internet_down_screen.dart';
 
 enum MethodType { GET, POST, PUT, DELETE }
 
@@ -56,6 +58,7 @@ class NetworkRequester implements NetworkRequesterBase {
       if (e.error is SocketException) {
         //handle internet down
         //dns looked failed
+        Get.to(() => const InternetDownScreen());
         logger.e("error is: $e");
       }
       if (e.response != null) {

@@ -8,7 +8,7 @@ class ArtistsRepository {
   final NetworkRequester _networkRequester = NetworkRequester();
   Future<ArtistAlbumsModel> fetchArtistAlbums({
     required String artistId,
-    required String limit,
+    required int limit,
   }) async {
     try {
       final artistAlbumsResponse = await _networkRequester.request(

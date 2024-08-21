@@ -49,22 +49,22 @@ class TopTracksView extends StatelessWidget {
                     SizedBox(
                       height: 100,
                       child: CachedNetworkImage(
-                        imageUrl: controller
-                                .topTracks?.tracks?[index].backgroundImage ??
-                            "",
-                        imageBuilder: (context, imageProvider) => Container(
-                          height: 100,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xff87CEEB)),
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
+                      imageUrl: controller
+                              .topTracks?.tracks?[index].backgroundImage ??
+                          "",
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xff87CEEB)),
+                          borderRadius: BorderRadius.circular(8),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
+                    ),
                     ),
                     const SizedBox(height: 8),
                     SizedBox(

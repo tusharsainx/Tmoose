@@ -53,28 +53,28 @@ class UserDetailsView extends StatelessWidget {
         SizedBox(
           height: 120,
           child: CachedNetworkImage(
-            imageUrl: controller.userProfileModel?.image ?? "",
-            imageBuilder: (context, imageProvider) {
-              return Container(
-                height: 120,
-                width: 120,
-                decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xff87CEEB), width: 2),
-                  borderRadius: BorderRadius.circular(100),
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  ),
+          imageUrl: controller.userProfileModel?.image ?? "",
+          imageBuilder: (context, imageProvider) {
+            return Container(
+              height: 120,
+              width: 120,
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xff87CEEB), width: 2),
+                borderRadius: BorderRadius.circular(100),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
                 ),
-              );
-            },
-            errorWidget: (context, url, error) {
-              return const SizedBoxShimmer(
-                height: 120,
-                width: 120,
-              );
-            },
-          ),
+              ),
+            );
+          },
+          errorWidget: (context, url, error) {
+            return const SizedBoxShimmer(
+              height: 120,
+              width: 120,
+            );
+          },
+        ),
         ),
       ],
     );
