@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/routes/app_routes.dart';
@@ -29,105 +30,84 @@ class RecentlyPlayedTracksView extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: 72 *
-              ((controller.recentlyPlayedTracksModel?.tracks?.length) ?? 0)
-                  .toDouble(),
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Get.toNamed(AppRoutes.track,
-                      arguments: (controller
-                              .recentlyPlayedTracksModel?.tracks?[index]) ??
-                          TrackModel());
-                },
-                child: SizedBox(
-                  height: 50,
-                  child: Row(
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final track = controller.recentlyPlayedTracksModel?.tracks?[index];
+            return GestureDetector(
+              onTap: () {
+                Get.toNamed(AppRoutes.track, arguments: track ?? TrackModel());
+              },
+              child: Row(
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: track?.backgroundImage ?? "",
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        height: 50,
-                        child: CachedNetworkImage(
-                          imageUrl: controller.recentlyPlayedTracksModel
-                                  ?.tracks?[index].backgroundImage ??
-                              "",
-                          imageBuilder: (context, imageProvider) {
-                            return Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
+                        width: Get.width * 0.65,
+                        child: Text(
+                          track?.trackName ?? "",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: Get.width * 0.65,
-                            child: Text(
-                              controller.recentlyPlayedTracksModel
-                                      ?.tracks?[index].trackName ??
-                                  "",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                              maxLines: 1,
-                              overflow: TextOverflow.fade,
-                            ),
-                          ),
-                          SizedBox(
-                            width: Get.width * 0.65,
-                            child: Text(
-                              controller.recentlyPlayedTracksModel
-                                      ?.tracks?[index].artists?[0].artistName ??
-                                  "",
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        width: Get.width * 0.65,
+                        child: Text(
+                          track?.artists?.first.artistName ?? "",
+                          style: const TextStyle(color: Colors.grey),
+                        ),
                       ),
-                      const Spacer(),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Icon(
-                            FontAwesomeIcons.clock,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            controller.songAgoTime(controller
-                                    .recentlyPlayedTracksModel
-                                    ?.tracks?[index]
-                                    .playedAt ??
-                                ""),
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      )
                     ],
                   ),
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const SizedBox(height: 20);
-            },
-            itemCount:
-                controller.recentlyPlayedTracksModel?.tracks?.length ?? 0,
-          ),
+                  const Spacer(),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Icon(
+                        FontAwesomeIcons.clock,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        controller.songAgoTime(track?.playedAt ?? ""),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 20);
+          },
+          itemCount: controller.recentlyPlayedTracksModel?.tracks?.length ?? 0,
         ),
       ],
     );

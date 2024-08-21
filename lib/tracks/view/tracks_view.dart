@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
 import 'package:tmoose/tracks/controller/tracks_view_controller.dart';
-import 'package:tmoose/tracks/view/track_view_shimmer.dart';
+import 'package:tmoose/tracks/view/track_artist_view_shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TrackPage extends GetView<TrackPageController> {
@@ -18,7 +18,7 @@ class TrackPage extends GetView<TrackPageController> {
       backgroundColor: Colors.black,
       body: Obx(() {
         if (controller.isDataLoading.value) {
-          return const TrackViewShimmer();
+          return const TrackArtistViewShimmer();
         } else {
           return CustomScrollView(
             physics: const BouncingScrollPhysics(),
@@ -32,20 +32,20 @@ class TrackPage extends GetView<TrackPageController> {
                   background: SizedBox(
                     height: Get.height * 0.5,
                     child: CachedNetworkImage(
-                      imageUrl: controller.trackModel?.backgroundImage ?? "",
-                      errorWidget: (context, url, error) =>
-                          SizedBox(height: Get.height * 0.5),
-                      imageBuilder: (context, imageProvider) {
-                        return Container(
-                          height: Get.height * 0.5,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
+                    imageUrl: controller.trackModel?.backgroundImage ?? "",
+                    errorWidget: (context, url, error) =>
+                        SizedBox(height: Get.height * 0.5),
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        height: Get.height * 0.5,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
                           ),
-                        );
-                      },
+                        ),
+                      );
+                    },
                     ),
                   ),
                 ),
@@ -225,26 +225,26 @@ class TrackPage extends GetView<TrackPageController> {
                                   height: 150,
                                   width: Get.width * 0.4,
                                   child: CachedNetworkImage(
-                                    imageUrl: controller
-                                            .trackModel?.album?.imageUrl ??
-                                        "",
-                                    errorWidget: (context, url, error) =>
-                                        SizedBoxShimmer(
-                                      width: Get.width * 0.4,
+                                  imageUrl: controller
+                                          .trackModel?.album?.imageUrl ??
+                                      "",
+                                  errorWidget: (context, url, error) =>
+                                      SizedBoxShimmer(
+                                    width: Get.width * 0.4,
+                                    height: 150,
+                                  ),
+                                  imageBuilder: (context, imageProvider) {
+                                    return Container(
                                       height: 150,
-                                    ),
-                                    imageBuilder: (context, imageProvider) {
-                                      return Container(
-                                        height: 150,
-                                        width: Get.width * 0.4,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
-                                          ),
+                                      width: Get.width * 0.4,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
                                         ),
-                                      );
-                                    },
+                                      ),
+                                    );
+                                  },
                                   ),
                                 ),
                                 const SizedBox(width: 10),

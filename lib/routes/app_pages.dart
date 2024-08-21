@@ -1,4 +1,6 @@
 import 'package:get/route_manager.dart';
+import 'package:tmoose/artists/binding/artist_view_binding.dart';
+import 'package:tmoose/artists/view/artist_view.dart';
 import 'package:tmoose/authentication/bindings/auth_binding.dart';
 import 'package:tmoose/authentication/middleware/auth_middleware.dart';
 import 'package:tmoose/authentication/views/auth_view.dart';
@@ -25,6 +27,11 @@ class AppPages {
       name: AppRoutes.track,
       page: () => const TrackPage(),
       binding: TrackPageBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.artist,
+      page: () => const ArtistPage(),
+      binding: ArtistViewBinding(),
     ),
   ];
 }

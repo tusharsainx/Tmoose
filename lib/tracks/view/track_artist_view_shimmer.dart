@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
 
-class TrackViewShimmer extends StatelessWidget {
-  const TrackViewShimmer({super.key});
+class TrackArtistViewShimmer extends StatelessWidget {
+  const TrackArtistViewShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
