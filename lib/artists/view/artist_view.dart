@@ -7,6 +7,7 @@ import 'package:tmoose/artists/controller/artist_view_controller.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
+import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/tracks/view/track_artist_view_shimmer.dart';
@@ -269,13 +270,20 @@ class ArtistPage extends GetView<ArtistViewController> {
                           ],
                         ],
                       ),
-                      const Text(
-                        "View more >",
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          color: Color(0xff87CEEB),
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const InfoAggregatorView(
+                                isArtistTopTracks: true,
+                              ));
+                        },
+                        child: const Text(
+                          "View more >",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: Color(0xff87CEEB),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -387,13 +395,20 @@ class ArtistPage extends GetView<ArtistViewController> {
                           ],
                         ],
                       ),
-                      const Text(
-                        "View more >",
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          color: Color(0xff87CEEB),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const InfoAggregatorView(
+                                isArtistTopAlbums: true,
+                              ));
+                        },
+                        child: const Text(
+                          "View more >",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: Color(0xff87CEEB),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -411,9 +426,14 @@ class ArtistPage extends GetView<ArtistViewController> {
                         height: 150, // Adjust height as needed
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          itemCount: controller
-                                  .artistRelatedArtistsModel?.artists?.length ??
-                              0,
+                          itemCount: (controller.artistRelatedArtistsModel
+                                          ?.artists?.length ??
+                                      0) >
+                                  10
+                              ? 10
+                              : (controller.artistRelatedArtistsModel?.artists
+                                      ?.length ??
+                                  0),
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () async {
@@ -468,6 +488,18 @@ class ArtistPage extends GetView<ArtistViewController> {
                           separatorBuilder: (context, index) {
                             return const SizedBox(width: 10);
                           },
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Text(
+                          "View more >",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: Color(0xff87CEEB),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),

@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
@@ -17,16 +19,21 @@ class RecentlyPlayedTracksView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               "Recently played",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Text(
-              "More",
-              style: TextStyle(fontSize: 14, color: Color(0xff87CEEB)),
+            GestureDetector(
+              onTap: () {
+                // Get.to(() => const InfoAggregatorView());
+              },
+              child: const Text(
+                "View more",
+                style: TextStyle(fontSize: 14, color: Color(0xff87CEEB)),
+              ),
             ),
           ],
         ),
@@ -107,7 +114,10 @@ class RecentlyPlayedTracksView extends StatelessWidget {
           separatorBuilder: (context, index) {
             return const SizedBox(height: 20);
           },
-          itemCount: controller.recentlyPlayedTracksModel?.tracks?.length ?? 0,
+          itemCount:
+              (controller.recentlyPlayedTracksModel?.tracks?.length ?? 0) > 10
+                  ? 10
+                  : (controller.recentlyPlayedTracksModel?.tracks?.length ?? 0),
         ),
       ],
     );

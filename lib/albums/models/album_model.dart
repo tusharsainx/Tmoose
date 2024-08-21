@@ -44,7 +44,10 @@ class ArtistAlbumsModel {
     final items = json?["items"];
     if (items == null) return ArtistAlbumsModel();
     for (int i = 0; i < items.length; i++) {
-      albums.add(AlbumModel.fromJson(items[i]));
+      final AlbumModel albumModel = AlbumModel.fromJson(items[i]);
+      if ((albumModel.totalTracks ?? 0) > 1) {
+        albums.add(albumModel);
+      }
     }
     return ArtistAlbumsModel(
       albums: albums,

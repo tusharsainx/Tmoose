@@ -39,11 +39,11 @@ class UserProfileController extends GetxController {
     isDataLoading(true);
     await initTracksAndArtists(
       timeRange: choosenTimeRange.value.name,
-      items: 10,
+      items: 50,
     );
     await fetchUserProfile();
     await fetchRecentlyPlayedTracks(
-      limit: 20,
+      limit: 50,
     );
     await fetchCurrentlyPlayingTrack();
     isDataLoading(false);
