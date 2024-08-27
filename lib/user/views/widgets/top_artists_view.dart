@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:tmoose/helpers/artist_page_helper.dart';
 import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
@@ -48,6 +49,7 @@ class TopArtistsView extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
+                  ArtistPageHelper.setUniqueId();
                   Get.toNamed(AppRoutes.artist,
                       arguments: controller.topArtists?.artists?[index]);
                 },

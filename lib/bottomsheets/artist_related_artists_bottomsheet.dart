@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/artists/controller/artist_view_controller.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
+import 'package:tmoose/helpers/artist_page_helper.dart';
 import 'package:tmoose/helpers/colors.dart';
 import 'package:tmoose/routes/app_routes.dart';
 
 class ArtistRelatedArtistsBottomsheet {
-  static Future<void> show({required BuildContext context}) async {
-    final controller = Get.find<ArtistViewController>();
+  static Future<void> show(
+      {required BuildContext context, required String tag}) async {
+    final controller = Get.find<ArtistViewController>(tag: tag);
     await showModalBottomSheet(
       isDismissible: true,
       isScrollControlled: true,
@@ -41,7 +43,9 @@ class ArtistRelatedArtistsBottomsheet {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                             onTap: () async {
+                              ArtistPageHelper.setUniqueId();
                               await Get.toNamed(
+                                preventDuplicates: false,
                                 AppRoutes.artist,
                                 arguments: controller.artistRelatedArtistsModel
                                         ?.artists?[index] ??
