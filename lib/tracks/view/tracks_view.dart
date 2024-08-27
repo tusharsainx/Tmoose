@@ -32,20 +32,20 @@ class TrackPage extends GetView<TrackPageController> {
                   background: SizedBox(
                     height: Get.height * 0.5,
                     child: CachedNetworkImage(
-                    imageUrl: controller.trackModel?.backgroundImage ?? "",
-                    errorWidget: (context, url, error) =>
-                        SizedBox(height: Get.height * 0.5),
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        height: Get.height * 0.5,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
+                      imageUrl: controller.trackModel?.backgroundImage ?? "",
+                      errorWidget: (context, url, error) =>
+                          SizedBox(height: Get.height * 0.5),
+                      imageBuilder: (context, imageProvider) {
+                        return Container(
+                          height: Get.height * 0.5,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -210,6 +210,7 @@ class TrackPage extends GetView<TrackPageController> {
                         const SizedBox(height: 15),
                         GestureDetector(
                           onTap: () async {
+                            controller.globalPause();
                             await launchUrl(Uri.parse(controller
                                     .trackModel?.album?.albumSpotifyLink ??
                                 ""));
@@ -225,26 +226,26 @@ class TrackPage extends GetView<TrackPageController> {
                                   height: 150,
                                   width: Get.width * 0.4,
                                   child: CachedNetworkImage(
-                                  imageUrl: controller
-                                          .trackModel?.album?.imageUrl ??
-                                      "",
-                                  errorWidget: (context, url, error) =>
-                                      SizedBoxShimmer(
-                                    width: Get.width * 0.4,
-                                    height: 150,
-                                  ),
-                                  imageBuilder: (context, imageProvider) {
-                                    return Container(
-                                      height: 150,
+                                    imageUrl: controller
+                                            .trackModel?.album?.imageUrl ??
+                                        "",
+                                    errorWidget: (context, url, error) =>
+                                        SizedBoxShimmer(
                                       width: Get.width * 0.4,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
+                                      height: 150,
+                                    ),
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        height: 150,
+                                        width: Get.width * 0.4,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -406,11 +407,11 @@ class TrackPage extends GetView<TrackPageController> {
                         ],
                       ),
                       /*
- 
-  String? modality;
-  double? loudness;
-  int? beatsPerBar;
-
+     
+      String? modality;
+      double? loudness;
+      int? beatsPerBar;
+    
                   */
                       const SizedBox(height: 20),
                       const Text(
@@ -515,6 +516,7 @@ class TrackPage extends GetView<TrackPageController> {
                       ),
                       GestureDetector(
                         onTap: () async {
+                          controller.globalPause();
                           await launchUrl(Uri.parse(
                               controller.trackModel?.trackSpotifyLink ?? ""));
                         },
