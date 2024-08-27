@@ -8,7 +8,7 @@ import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/tracks/repository/tracks_repository.dart';
 
-class TrackPageController extends GetxController {
+class TrackPageController extends GetxController with WidgetsBindingObserver {
   TrackAudioFeaturesModel? trackAudioFeaturesModel;
   final isDataLoading = true.obs;
   final TracksRepository _tracksRepository = TracksRepository();
@@ -28,8 +28,26 @@ class TrackPageController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        break;
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.paused:
+        break;
+      case AppLifecycleState.detached:
+        break;
+      case AppLifecycleState.hidden:
+        globalPause();
+        break;
+    }
+  }
+
   Future<void> init() async {
     isDataLoading(true);
+    WidgetsBinding.instance.addObserver(this);
     if (Get.arguments is CurrentPlayingTrackModel) {
       trackModel = Get.arguments as CurrentPlayingTrackModel;
     } else {
@@ -70,6 +88,7 @@ class TrackPageController extends GetxController {
   }
 
   void globalPause() {
+    isSongPlayed(false);
     audioPlayer.pause();
   }
 

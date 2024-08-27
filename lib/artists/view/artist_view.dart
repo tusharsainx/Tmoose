@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/artists/controller/artist_view_controller.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
+import 'package:tmoose/bottomsheets/artist_related_artists_bottomsheet.dart';
+import 'package:tmoose/helpers/artist_page_helper.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
 import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
@@ -13,11 +15,16 @@ import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/tracks/view/track_artist_view_shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ArtistPage extends GetView<ArtistViewController> {
-  const ArtistPage({super.key});
-
+class ArtistPage extends StatelessWidget {
+  const ArtistPage({
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
+    final String tag = ArtistPageHelper.uniqueid;
+    final controller = Get.find<ArtistViewController>(
+      tag: tag,
+    );
     return Scaffold(
       backgroundColor: Colors.black,
       body: Obx(() {
@@ -25,7 +32,7 @@ class ArtistPage extends GetView<ArtistViewController> {
           return const TrackArtistViewShimmer();
         } else {
           return CustomScrollView(
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             shrinkWrap: true,
             controller: controller.scrollController,
             slivers: [
@@ -437,13 +444,16 @@ class ArtistPage extends GetView<ArtistViewController> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () async {
+                                ArtistPageHelper.setUniqueId();
                                 final artistModel = controller
                                         .artistRelatedArtistsModel
                                         ?.artists?[index] ??
                                     ArtistModel();
-                                await Get.offNamed(AppRoutes.artist,
-                                    arguments: artistModel,
-                                    preventDuplicates: false);
+                                await Get.toNamed(
+                                  AppRoutes.artist,
+                                  arguments: artistModel,
+                                  preventDuplicates: false,
+                                );
                               },
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -491,7 +501,10 @@ class ArtistPage extends GetView<ArtistViewController> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          await ArtistRelatedArtistsBottomsheet.show(
+                              tag: tag, context: context);
+                        },
                         child: const Text(
                           "View more >",
                           textAlign: TextAlign.end,

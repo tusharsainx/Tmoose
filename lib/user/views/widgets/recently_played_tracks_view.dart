@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:tmoose/bottomsheets/recently_played_tracks_bottomsheet.dart';
 import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
@@ -27,8 +28,8 @@ class RecentlyPlayedTracksView extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             GestureDetector(
-              onTap: () {
-                // Get.to(() => const InfoAggregatorView());
+              onTap: () async {
+                await RecentlyPlayedTracksBottomsheet.show(context: context);
               },
               child: const Text(
                 "View more",

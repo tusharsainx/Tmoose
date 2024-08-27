@@ -45,12 +45,6 @@ class ArtistViewController extends GetxController {
     return singers.substring(0, singers.length - 2);
   }
 
-  @override
-  void onReady() {
-    // TODO: implement onReady
-    super.onReady();
-  }
-
   String artistFollowers(String? followers) {
     if (followers == null) return "0";
     if (followers.length <= 4) return followers;
