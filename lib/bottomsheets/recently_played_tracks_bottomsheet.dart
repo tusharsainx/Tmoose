@@ -11,14 +11,25 @@ class RecentlyPlayedTracksBottomsheet {
   static Future<void> show({required BuildContext context}) async {
     final controller = Get.find<UserProfileController>();
     await showModalBottomSheet(
-      backgroundColor: kAppBoxBackgroundColor,
       context: context,
       isScrollControlled: true,
-      showDragHandle: true,
-      enableDrag: true,
+      showDragHandle: false,
+      enableDrag: false,
       builder: (context) {
-        return SizedBox(
-          height: Get.height * 0.8,
+        return Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            gradient: LinearGradient(
+              colors: [
+                kAppHeroColor,
+                Color(0xFF000000),
+              ], // Deep Blue to Black
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          height: Get.height * 0.7,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: SingleChildScrollView(
@@ -31,6 +42,7 @@ class RecentlyPlayedTracksBottomsheet {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: Colors.black
                     ),
                   ),
                   const SizedBox(
@@ -45,7 +57,7 @@ class RecentlyPlayedTracksBottomsheet {
                           Get.toNamed(
                             AppRoutes.track,
                             arguments: controller.recentlyPlayedTracksModel
-                                    ?.tracks?[index] ??
+                                    .value.data?.tracks?[index] ??
                                 TrackModel(),
                           );
                         },
@@ -55,11 +67,17 @@ class RecentlyPlayedTracksBottomsheet {
                               height: 50,
                               width: 50,
                               child: CachedNetworkImage(
-                                imageUrl: controller.recentlyPlayedTracksModel
-                                        ?.tracks?[index].backgroundImage ??
+                                imageUrl: controller
+                                        .recentlyPlayedTracksModel
+                                        .value
+                                        .data
+                                        ?.tracks?[index]
+                                        .backgroundImage ??
                                     "",
                                 placeholder: (context, url) =>
-                                    const CircularProgressIndicator(),
+                                    const CircularProgressIndicator(
+                                  color: Color(0xff87CEEB),
+                                ),
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                                 imageBuilder: (context, imageProvider) {
@@ -84,8 +102,8 @@ class RecentlyPlayedTracksBottomsheet {
                                 SizedBox(
                                   width: Get.width * 0.65,
                                   child: Text(
-                                    controller.recentlyPlayedTracksModel
-                                            ?.tracks?[index].trackName ??
+                                    controller.recentlyPlayedTracksModel.value
+                                            .data?.tracks?[index].trackName ??
                                         "",
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
@@ -98,6 +116,8 @@ class RecentlyPlayedTracksBottomsheet {
                                   child: Text(
                                     controller
                                             .recentlyPlayedTracksModel
+                                            .value
+                                            .data
                                             ?.tracks?[index]
                                             .artists
                                             ?.first
@@ -120,6 +140,8 @@ class RecentlyPlayedTracksBottomsheet {
                                 Text(
                                   controller.songAgoTime(controller
                                           .recentlyPlayedTracksModel
+                                          .value
+                                          .data
                                           ?.tracks?[index]
                                           .playedAt ??
                                       ""),
@@ -136,9 +158,9 @@ class RecentlyPlayedTracksBottomsheet {
                     separatorBuilder: (context, index) {
                       return const SizedBox(height: 15);
                     },
-                    itemCount:
-                        controller.recentlyPlayedTracksModel?.tracks?.length ??
-                            0,
+                    itemCount: controller.recentlyPlayedTracksModel.value.data
+                            ?.tracks?.length ??
+                        0,
                   )
                 ],
               ),
