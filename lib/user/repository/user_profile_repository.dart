@@ -1,4 +1,4 @@
-import 'package:tmoose/helpers/logger.dart';
+import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/network_requester/apis.dart';
 import 'package:tmoose/network_requester/network_request_helper.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
@@ -7,7 +7,7 @@ import 'package:tmoose/user/models/user_profile_model.dart';
 
 class UserProfileRepository {
   final NetworkRequester _networkRequester = NetworkRequester();
-  Future<UserProfileModel> fetchUserProfile() async {
+  Future<Status<UserProfileModel>> fetchUserProfile() async {
     try {
       final userProfileResponse = await _networkRequester.request(
         Api.baseUrl,
@@ -16,13 +16,14 @@ class UserProfileRepository {
         null,
         null,
       );
-      return UserProfileModel.fromJson(userProfileResponse);
+      return Status.success(
+          data: UserProfileModel.fromJson(userProfileResponse));
     } catch (e) {
-      return UserProfileModel();
+      return Status.error(exception: e.toString());
     }
   }
 
-  Future<UserTopArtistsModel> fetchTopArtists({
+  Future<Status<UserTopArtistsModel>> fetchTopArtists({
     required String timeRange,
     required int items,
   }) async {
@@ -35,13 +36,14 @@ class UserProfileRepository {
         null,
       );
 
-      return UserTopArtistsModel.fromJson(topArtistsResponse);
+      return Status.success(
+          data: UserTopArtistsModel.fromJson(topArtistsResponse));
     } catch (e) {
-      return UserTopArtistsModel();
+      return Status.error(exception: e.toString());
     }
   }
 
-  Future<UserTopTracksModel> fetchTopTracks({
+  Future<Status<UserTopTracksModel>> fetchTopTracks({
     required String timeRange,
     required int items,
   }) async {
@@ -53,13 +55,14 @@ class UserProfileRepository {
         null,
         null,
       );
-      return UserTopTracksModel.fromJson(topTracksResponse);
+      return Status.success(
+          data: UserTopTracksModel.fromJson(topTracksResponse));
     } catch (e) {
-      return UserTopTracksModel();
+      return Status.error(exception: e.toString());
     }
   }
 
-  Future<CurrentPlayingTrackModel> fetchCurrentlyPlayingTrack() async {
+  Future<Status<CurrentPlayingTrackModel>> fetchCurrentlyPlayingTrack() async {
     try {
       final currentPlayingTrackResponse = await _networkRequester.request(
         Api.baseUrl,
@@ -68,13 +71,14 @@ class UserProfileRepository {
         null,
         null,
       );
-      return CurrentPlayingTrackModel.fromJson(currentPlayingTrackResponse);
+      return Status.success(
+          data: CurrentPlayingTrackModel.fromJson(currentPlayingTrackResponse));
     } catch (e) {
-      return CurrentPlayingTrackModel();
+      return Status.error(exception: e.toString());
     }
   }
 
-  Future<RecentlyPlayedTracksModel> fetchRecentlyPlayedTracks(
+  Future<Status<RecentlyPlayedTracksModel>> fetchRecentlyPlayedTracks(
       {required int limit}) async {
     try {
       final recentlyPlayedTracksResponse = await _networkRequester.request(
@@ -84,9 +88,11 @@ class UserProfileRepository {
         null,
         null,
       );
-      return RecentlyPlayedTracksModel.fromJson(recentlyPlayedTracksResponse);
+      return Status.success(
+          data:
+              RecentlyPlayedTracksModel.fromJson(recentlyPlayedTracksResponse));
     } catch (e) {
-      return RecentlyPlayedTracksModel();
+      return Status.error(exception: e.toString());
     }
   }
 }

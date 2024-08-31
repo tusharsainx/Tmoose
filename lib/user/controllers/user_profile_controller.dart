@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/helpers/logger.dart';
+import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/user/helper/enums.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
@@ -9,16 +10,17 @@ import 'package:tmoose/user/repository/user_profile_repository.dart';
 
 class UserProfileController extends GetxController {
   final UserProfileRepository _userProfileRepository = UserProfileRepository();
-  final isDataLoading = true.obs;
   final isAnySongCurrentlyPlaying = false.obs;
   final choosenTimeRange = TimeRange.short_term.obs;
   final scrollController = ScrollController();
   final isScrolledSpecificHeight = false.obs;
-  UserTopArtistsModel? topArtists;
-  UserTopTracksModel? topTracks;
-  UserProfileModel? userProfileModel;
-  CurrentPlayingTrackModel? currentPlayingTrackModel;
-  RecentlyPlayedTracksModel? recentlyPlayedTracksModel;
+  final topArtists = Status<UserTopArtistsModel>.loading().obs;
+  final topTracks = Status<UserTopTracksModel>.loading().obs;
+  final userProfileModel = Status<UserProfileModel>.loading().obs;
+  final currentPlayingTrackModel =
+      Status<CurrentPlayingTrackModel>.loading().obs;
+  final recentlyPlayedTracksModel =
+      Status<RecentlyPlayedTracksModel>.loading().obs;
   @override
   void onInit() {
     scrollController.addListener(() {
@@ -36,36 +38,31 @@ class UserProfileController extends GetxController {
   }
 
   Future<void> init() async {
-    isDataLoading(true);
-    await initTracksAndArtists(
+    initTracksAndArtists(
       timeRange: choosenTimeRange.value.name,
       items: 50,
     );
-    await fetchUserProfile();
-    await fetchRecentlyPlayedTracks(
+    fetchUserProfile();
+    fetchRecentlyPlayedTracks(
       limit: 50,
     );
-    await fetchCurrentlyPlayingTrack();
-    isDataLoading(false);
+    fetchCurrentlyPlayingTrack();
   }
 
-  Future<void> changeTimeOfSearch({required int items}) async {
-    isDataLoading(true);
+  void changeTimeOfSearch({required int items}) {
     isScrolledSpecificHeight(false);
-    await initTracksAndArtists(
+    initTracksAndArtists(
       timeRange: choosenTimeRange.value.name,
       items: items,
     );
-    isDataLoading(false);
   }
 
-  Future<void> initTracksAndArtists(
-      {required String timeRange, required int items}) async {
-    await fetchTopArtists(
+  void initTracksAndArtists({required String timeRange, required int items}) {
+    fetchTopArtists(
       timeRange: timeRange,
       items: items,
     );
-    await fetchTopTracks(
+    fetchTopTracks(
       timeRange: timeRange,
       items: items,
     );
@@ -79,41 +76,42 @@ class UserProfileController extends GetxController {
 
   Future fetchTopArtists(
       {required String timeRange, required int items}) async {
-    topArtists = await _userProfileRepository.fetchTopArtists(
+    topArtists.value = Status.loading();
+    topArtists.value = await _userProfileRepository.fetchTopArtists(
         timeRange: timeRange, items: items);
     logger.i("top artists: $topArtists");
   }
 
   Future fetchTopTracks({required String timeRange, required int items}) async {
-    topTracks = await _userProfileRepository.fetchTopTracks(
+    topTracks.value = Status.loading();
+    topTracks.value = await _userProfileRepository.fetchTopTracks(
         timeRange: timeRange, items: items);
     logger.i("top tracks: $topTracks");
   }
 
   Future fetchRecentlyPlayedTracks({required int limit}) async {
-    recentlyPlayedTracksModel =
+    recentlyPlayedTracksModel.value = Status.loading();
+    recentlyPlayedTracksModel.value =
         await _userProfileRepository.fetchRecentlyPlayedTracks(limit: limit);
-    logger.i("recently played tracks: ${recentlyPlayedTracksModel?.tracks}");
   }
 
   Future fetchCurrentlyPlayingTrack() async {
-    currentPlayingTrackModel =
+    currentPlayingTrackModel.value = Status.loading();
+    currentPlayingTrackModel.value =
         await _userProfileRepository.fetchCurrentlyPlayingTrack();
-    if (currentPlayingTrackModel?.album == null &&
-        currentPlayingTrackModel?.artists == null &&
-        currentPlayingTrackModel?.backgroundImage == null &&
-        currentPlayingTrackModel?.trackName == null) {
+    if (currentPlayingTrackModel.value.data?.album == null &&
+        currentPlayingTrackModel.value.data?.artists == null &&
+        currentPlayingTrackModel.value.data?.backgroundImage == null &&
+        currentPlayingTrackModel.value.data?.trackName == null) {
       isAnySongCurrentlyPlaying.value = false;
     } else {
       isAnySongCurrentlyPlaying.value = true;
     }
-    logger.i(
-        "current playing model: ${currentPlayingTrackModel?.album?.albumName}");
   }
 
   Future fetchUserProfile() async {
-    userProfileModel = await _userProfileRepository.fetchUserProfile();
-    logger.i("user profile: ${userProfileModel?.name}");
+    userProfileModel.value = Status.loading();
+    userProfileModel.value = await _userProfileRepository.fetchUserProfile();
   }
 
   String songAgoTime(String timestamp) {
