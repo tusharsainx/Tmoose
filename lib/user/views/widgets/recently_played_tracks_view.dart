@@ -1,17 +1,83 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/bottomsheets/recently_played_tracks_bottomsheet.dart';
-import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
+import 'package:tmoose/helpers/shimmer_widgets.dart';
+import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
+import 'package:tmoose/user/helper/something_went_wrong.dart';
 
-class RecentlyPlayedTracksView extends StatelessWidget {
+class RecentlyPlayedTracksView extends GetView<UserProfileController> {
   const RecentlyPlayedTracksView({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      switch (controller.recentlyPlayedTracksModel.value.apiStatus) {
+        case ApiStatus.loading:
+          return const _Loading();
+        case ApiStatus.success:
+          return const _Loaded();
+        case ApiStatus.error:
+          return const SomethingWentWrong();
+        case ApiStatus.none:
+          return const SizedBox();
+      }
+    });
+  }
+}
+
+class _Loading extends StatelessWidget {
+  const _Loading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBoxShimmer(width: 200, height: 18),
+            SizedBoxShimmer(width: 100, height: 14),
+          ],
+        ),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return const Row(
+              children: [
+                SizedBoxShimmer(width: 50, height: 50),
+                SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBoxShimmer(width: 200, height: 16),
+                    SizedBoxShimmer(width: 200, height: 16),
+                  ],
+                ),
+                Spacer(),
+                SizedBoxShimmer(width: 40, height: 40),
+              ],
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 20);
+          },
+          itemCount: 10,
+        ),
+      ],
+    );
+  }
+}
+
+class _Loaded extends StatelessWidget {
+  const _Loaded();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +108,8 @@ class RecentlyPlayedTracksView extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final track = controller.recentlyPlayedTracksModel?.tracks?[index];
+            final track =
+                controller.recentlyPlayedTracksModel.value.data?.tracks?[index];
             return GestureDetector(
               onTap: () {
                 Get.toNamed(AppRoutes.track, arguments: track ?? TrackModel());
@@ -52,7 +119,9 @@ class RecentlyPlayedTracksView extends StatelessWidget {
                   CachedNetworkImage(
                     imageUrl: track?.backgroundImage ?? "",
                     placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
+                        const CircularProgressIndicator(
+                      color: Color(0xff87CEEB),
+                    ),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                     imageBuilder: (context, imageProvider) {
@@ -115,10 +184,14 @@ class RecentlyPlayedTracksView extends StatelessWidget {
           separatorBuilder: (context, index) {
             return const SizedBox(height: 20);
           },
-          itemCount:
-              (controller.recentlyPlayedTracksModel?.tracks?.length ?? 0) > 10
-                  ? 10
-                  : (controller.recentlyPlayedTracksModel?.tracks?.length ?? 0),
+          itemCount: (controller.recentlyPlayedTracksModel.value.data?.tracks
+                          ?.length ??
+                      0) >
+                  10
+              ? 10
+              : (controller
+                      .recentlyPlayedTracksModel.value.data?.tracks?.length ??
+                  0),
         ),
       ],
     );
