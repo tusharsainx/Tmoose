@@ -16,11 +16,21 @@ class ArtistRelatedArtistsBottomsheet {
       isScrollControlled: true,
       context: context,
       backgroundColor: kAppBoxBackgroundColor,
-      enableDrag: true,
-      showDragHandle: true,
       builder: (context) {
-        return SizedBox(
-          height: Get.height * 0.8,
+        return Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            gradient: LinearGradient(
+              colors: [
+                kAppHeroColor,
+                Color(0xFF000000),
+              ], // Deep Blue to Black
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+            ),
+          ),
+          height: Get.height * 0.7,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: SingleChildScrollView(
@@ -32,6 +42,7 @@ class ArtistRelatedArtistsBottomsheet {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(
@@ -48,7 +59,7 @@ class ArtistRelatedArtistsBottomsheet {
                                 preventDuplicates: false,
                                 AppRoutes.artist,
                                 arguments: controller.artistRelatedArtistsModel
-                                        ?.artists?[index] ??
+                                        .value.data?.artists?[index] ??
                                     ArtistModel(),
                               );
                             },
@@ -60,6 +71,8 @@ class ArtistRelatedArtistsBottomsheet {
                                   child: CachedNetworkImage(
                                     imageUrl: controller
                                             .artistRelatedArtistsModel
+                                            .value
+                                            .data
                                             ?.artists?[index]
                                             .imageUrl ??
                                         "",
@@ -71,13 +84,12 @@ class ArtistRelatedArtistsBottomsheet {
                                   width: 10,
                                 ),
                                 Text(
-                                  controller.artistRelatedArtistsModel
-                                          ?.artists?[index].artistName ??
+                                  controller.artistRelatedArtistsModel.value
+                                          .data?.artists?[index].artistName ??
                                       "",
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
                                   ),
                                 )
                               ],
@@ -88,8 +100,8 @@ class ArtistRelatedArtistsBottomsheet {
                           height: 15,
                         );
                       },
-                      itemCount: controller
-                              .artistRelatedArtistsModel?.artists?.length ??
+                      itemCount: controller.artistRelatedArtistsModel.value.data
+                              ?.artists?.length ??
                           0),
                 ],
               ),

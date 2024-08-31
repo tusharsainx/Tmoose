@@ -14,8 +14,8 @@ class UserSpotifyProfileView extends StatelessWidget {
     final UserProfileController controller = Get.find<UserProfileController>();
     return GestureDetector(
       onTap: () async {
-        await launchUrl(
-            Uri.parse(controller.userProfileModel?.userSpotifyProfile ?? ""));
+        await launchUrl(Uri.parse(
+            controller.userProfileModel.value.data?.userSpotifyProfile ?? ""));
       },
       child: Container(
         height: 50,

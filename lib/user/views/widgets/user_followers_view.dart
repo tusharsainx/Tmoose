@@ -27,8 +27,8 @@ class UserFollowersView extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: controller
-                        .userFollowers(controller.userProfileModel?.followers),
+                    text: controller.userFollowers(
+                        controller.userProfileModel.value.data?.followers),
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 16,

@@ -8,6 +8,7 @@ import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
 import 'package:tmoose/helpers/colors.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
+import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
@@ -21,11 +22,13 @@ class InfoAggregatorView extends StatelessWidget {
     this.isArtistTopTracks,
     this.isUserTopArtists,
     this.isUserTopTracks,
+    this.artistPageControllerId,
   });
   final bool? isUserTopArtists;
   final bool? isUserTopTracks;
   final bool? isArtistTopTracks;
   final bool? isArtistTopAlbums;
+  final String? artistPageControllerId;
   @override
   Widget build(BuildContext context) {
     UserProfileController? userProfileController =
@@ -33,35 +36,50 @@ class InfoAggregatorView extends StatelessWidget {
             ? Get.find<UserProfileController>()
             : null;
     ArtistViewController? artistViewController =
-        Get.isRegistered<ArtistViewController>()
-            ? Get.find<ArtistViewController>()
+        Get.isRegistered<ArtistViewController>(tag: artistPageControllerId)
+            ? Get.find<ArtistViewController>(tag: artistPageControllerId)
             : null;
     if (artistViewController != null) {
       return DefaultTabController(
         length: 2,
         initialIndex: isArtistTopTracks != null && isArtistTopTracks! ? 0 : 1,
         child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              indicator: BoxDecoration(),
-              labelColor: kAppHeroColor,
-              indicatorColor: kAppHeroColor,
-              tabs: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    "Artist top tracks",
-                    style: TextStyle(fontSize: 16),
-                  ),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(70),
+            child: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                colors: [
+                  Color(0xFF1A237E),
+                  Color(0xFF000000)
+                ], // Deep Blue to Black
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )),
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                bottom: const TabBar(
+                  indicator: BoxDecoration(),
+                  labelColor: kAppHeroColor,
+                  indicatorColor: kAppHeroColor,
+                  tabs: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        "Artist top tracks",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        "Artist albums",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    "Artist albums",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           body: TabBarView(
@@ -71,8 +89,8 @@ class InfoAggregatorView extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () => Get.toNamed(AppRoutes.track,
-                        arguments: artistViewController
-                                .artistTopTracksModel?.tracks?[index] ??
+                        arguments: artistViewController.artistTopTracksModel
+                                .value.data?.tracks?[index] ??
                             TrackModel()),
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -97,6 +115,8 @@ class InfoAggregatorView extends StatelessWidget {
                               width: 70,
                               imageUrl: artistViewController
                                       .artistTopTracksModel
+                                      .value
+                                      .data
                                       ?.tracks?[index]
                                       .backgroundImage ??
                                   "",
@@ -113,8 +133,12 @@ class InfoAggregatorView extends StatelessWidget {
                                   child: Text(
                                     maxLines: 1,
                                     overflow: TextOverflow.fade,
-                                    artistViewController.artistTopTracksModel
-                                            ?.tracks?[index].trackName ??
+                                    artistViewController
+                                            .artistTopTracksModel
+                                            .value
+                                            .data
+                                            ?.tracks?[index]
+                                            .trackName ??
                                         "",
                                     style: const TextStyle(
                                         fontSize: 16,
@@ -130,6 +154,8 @@ class InfoAggregatorView extends StatelessWidget {
                                     artistViewController.getArtistNames(
                                         artistViewController
                                             .artistTopTracksModel
+                                            .value
+                                            .data
                                             ?.tracks?[index]
                                             .artists),
                                     style: const TextStyle(color: Colors.grey),
@@ -151,17 +177,17 @@ class InfoAggregatorView extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount:
-                    artistViewController.artistTopTracksModel?.tracks?.length ??
-                        0,
+                itemCount: artistViewController
+                        .artistTopTracksModel.value.data?.tracks?.length ??
+                    0,
               ),
               ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () async => await launchUrl(Uri.parse(
-                        artistViewController.artistAlbums?.albums?[index]
-                                .albumSpotifyLink ??
+                        artistViewController.artistAlbums.value.data
+                                ?.albums?[index].albumSpotifyLink ??
                             "")),
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -184,8 +210,8 @@ class InfoAggregatorView extends StatelessWidget {
                             const SizedBox(width: 10),
                             CachedNetworkImage(
                               width: 70,
-                              imageUrl: artistViewController
-                                      .artistAlbums?.albums?[index].imageUrl ??
+                              imageUrl: artistViewController.artistAlbums.value
+                                      .data?.albums?[index].imageUrl ??
                                   "",
                             ),
                             const SizedBox(
@@ -200,7 +226,7 @@ class InfoAggregatorView extends StatelessWidget {
                                   child: Text(
                                     maxLines: 1,
                                     overflow: TextOverflow.fade,
-                                    artistViewController.artistAlbums
+                                    artistViewController.artistAlbums.value.data
                                             ?.albums?[index].albumName ??
                                         "",
                                     style: const TextStyle(
@@ -215,8 +241,8 @@ class InfoAggregatorView extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.fade,
                                     artistViewController.getArtistNames(
-                                        artistViewController.artistAlbums
-                                            ?.albums?[index].artists),
+                                        artistViewController.artistAlbums.value
+                                            .data?.albums?[index].artists),
                                     style: const TextStyle(color: Colors.grey),
                                   ),
                                 ),
@@ -243,8 +269,9 @@ class InfoAggregatorView extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount:
-                    artistViewController.artistAlbums?.albums?.length ?? 0,
+                itemCount: artistViewController
+                        .artistAlbums.value.data?.albums?.length ??
+                    0,
               ),
             ],
           ),
@@ -260,7 +287,10 @@ class InfoAggregatorView extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Obx(() {
-                    if (!userProfileController.isDataLoading.value) {
+                    if (!(userProfileController.topArtists.value.apiStatus ==
+                            ApiStatus.loading ||
+                        userProfileController.topTracks.value.apiStatus ==
+                            ApiStatus.loading)) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -271,7 +301,7 @@ class InfoAggregatorView extends StatelessWidget {
                                   TimeRange.short_term) {
                                 userProfileController.choosenTimeRange.value =
                                     TimeRange.short_term;
-                                await userProfileController.changeTimeOfSearch(
+                                userProfileController.changeTimeOfSearch(
                                   items: 50,
                                 );
                               }
@@ -289,13 +319,13 @@ class InfoAggregatorView extends StatelessWidget {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () async {
+                            onTap: () {
                               if (userProfileController
                                       .choosenTimeRange.value !=
                                   TimeRange.medium_term) {
                                 userProfileController.choosenTimeRange.value =
                                     TimeRange.medium_term;
-                                await userProfileController.changeTimeOfSearch(
+                                userProfileController.changeTimeOfSearch(
                                   items: 50,
                                 );
                               }
@@ -313,13 +343,13 @@ class InfoAggregatorView extends StatelessWidget {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () async {
+                            onTap: () {
                               if (userProfileController
                                       .choosenTimeRange.value !=
                                   TimeRange.long_term) {
                                 userProfileController.choosenTimeRange.value =
                                     TimeRange.long_term;
-                                await userProfileController.changeTimeOfSearch(
+                                userProfileController.changeTimeOfSearch(
                                   items: 50,
                                 );
                               }
@@ -343,27 +373,43 @@ class InfoAggregatorView extends StatelessWidget {
                     }
                   })),
             ),
-            appBar: AppBar(
-              bottom: const TabBar(
-                indicator: BoxDecoration(),
-                labelColor: kAppHeroColor,
-                indicatorColor: kAppHeroColor,
-                tabs: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "User top tracks",
-                      style: TextStyle(fontSize: 16),
-                    ),
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(70),
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF1A237E),
+                      Color(0xFF000000)
+                    ], // Deep Blue to Black
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "User top artists",
-                      style: TextStyle(fontSize: 16),
-                    ),
+                ),
+                child: AppBar(
+                  backgroundColor: Colors.transparent,
+                  bottom: const TabBar(
+                    indicator: BoxDecoration(),
+                    labelColor: kAppHeroColor,
+                    indicatorColor: kAppHeroColor,
+                    tabs: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          "User top tracks",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          "User top artists",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
             backgroundColor: kAppScaffoldBackgroundColor,
@@ -371,15 +417,18 @@ class InfoAggregatorView extends StatelessWidget {
               children: <Widget>[
                 Obx(
                   () {
-                    return userProfileController.isDataLoading.value
+                    return (userProfileController.topArtists.value.apiStatus ==
+                                ApiStatus.loading ||
+                            userProfileController.topTracks.value.apiStatus ==
+                                ApiStatus.loading)
                         ? const VerticalListViewShimmer(height: 70)
                         : ListView.builder(
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () => Get.toNamed(AppRoutes.track,
-                                    arguments: userProfileController
-                                            .topTracks?.tracks?[index] ??
+                                    arguments: userProfileController.topTracks
+                                            .value.data?.tracks?[index] ??
                                         TrackModel()),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
@@ -406,6 +455,8 @@ class InfoAggregatorView extends StatelessWidget {
                                           width: 70,
                                           imageUrl: userProfileController
                                                   .topTracks
+                                                  .value
+                                                  .data
                                                   ?.tracks?[index]
                                                   .backgroundImage ??
                                               "",
@@ -425,6 +476,8 @@ class InfoAggregatorView extends StatelessWidget {
                                                 overflow: TextOverflow.fade,
                                                 userProfileController
                                                         .topTracks
+                                                        .value
+                                                        .data
                                                         ?.tracks?[index]
                                                         .trackName ??
                                                     "",
@@ -443,6 +496,8 @@ class InfoAggregatorView extends StatelessWidget {
                                                     .getArtistNames(
                                                         userProfileController
                                                             .topTracks
+                                                            .value
+                                                            .data
                                                             ?.tracks?[index]
                                                             .artists),
                                                 style: const TextStyle(
@@ -467,21 +522,24 @@ class InfoAggregatorView extends StatelessWidget {
                               );
                             },
                             itemCount: userProfileController
-                                    .topTracks?.tracks?.length ??
+                                    .topTracks.value.data?.tracks?.length ??
                                 0,
                           );
                   },
                 ),
                 Obx(() {
-                  return userProfileController.isDataLoading.value
+                  return (userProfileController.topArtists.value.apiStatus ==
+                              ApiStatus.loading ||
+                          userProfileController.topTracks.value.apiStatus ==
+                              ApiStatus.loading)
                       ? const VerticalListViewShimmer(height: 70)
                       : ListView.builder(
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () => Get.toNamed(AppRoutes.artist,
-                                  arguments: userProfileController
-                                          .topArtists?.artists?[index] ??
+                                  arguments: userProfileController.topArtists
+                                          .value.data?.artists?[index] ??
                                       ArtistModel()),
                               child: Padding(
                                 padding: const EdgeInsets.only(
@@ -507,6 +565,8 @@ class InfoAggregatorView extends StatelessWidget {
                                         width: 70,
                                         imageUrl: userProfileController
                                                 .topArtists
+                                                .value
+                                                .data
                                                 ?.artists?[index]
                                                 .imageUrl ??
                                             "",
@@ -521,6 +581,8 @@ class InfoAggregatorView extends StatelessWidget {
                                           overflow: TextOverflow.fade,
                                           userProfileController
                                                   .topArtists
+                                                  .value
+                                                  .data
                                                   ?.artists?[index]
                                                   .artistName ??
                                               "",
@@ -544,7 +606,7 @@ class InfoAggregatorView extends StatelessWidget {
                             );
                           },
                           itemCount: userProfileController
-                                  .topArtists?.artists?.length ??
+                                  .topArtists.value.data?.artists?.length ??
                               0,
                         );
                 })
