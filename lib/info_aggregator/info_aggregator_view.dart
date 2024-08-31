@@ -21,11 +21,13 @@ class InfoAggregatorView extends StatelessWidget {
     this.isArtistTopTracks,
     this.isUserTopArtists,
     this.isUserTopTracks,
+    this.artistPageControllerId,
   });
   final bool? isUserTopArtists;
   final bool? isUserTopTracks;
   final bool? isArtistTopTracks;
   final bool? isArtistTopAlbums;
+  final String? artistPageControllerId;
   @override
   Widget build(BuildContext context) {
     UserProfileController? userProfileController =
@@ -33,35 +35,50 @@ class InfoAggregatorView extends StatelessWidget {
             ? Get.find<UserProfileController>()
             : null;
     ArtistViewController? artistViewController =
-        Get.isRegistered<ArtistViewController>()
-            ? Get.find<ArtistViewController>()
+        Get.isRegistered<ArtistViewController>(tag: artistPageControllerId)
+            ? Get.find<ArtistViewController>(tag: artistPageControllerId)
             : null;
     if (artistViewController != null) {
       return DefaultTabController(
         length: 2,
         initialIndex: isArtistTopTracks != null && isArtistTopTracks! ? 0 : 1,
         child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              indicator: BoxDecoration(),
-              labelColor: kAppHeroColor,
-              indicatorColor: kAppHeroColor,
-              tabs: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    "Artist top tracks",
-                    style: TextStyle(fontSize: 16),
-                  ),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(70),
+            child: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                colors: [
+                  Color(0xFF1A237E),
+                  Color(0xFF000000)
+                ], // Deep Blue to Black
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )),
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                bottom: const TabBar(
+                  indicator: BoxDecoration(),
+                  labelColor: kAppHeroColor,
+                  indicatorColor: kAppHeroColor,
+                  tabs: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        "Artist top tracks",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        "Artist albums",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    "Artist albums",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           body: TabBarView(
@@ -343,27 +360,43 @@ class InfoAggregatorView extends StatelessWidget {
                     }
                   })),
             ),
-            appBar: AppBar(
-              bottom: const TabBar(
-                indicator: BoxDecoration(),
-                labelColor: kAppHeroColor,
-                indicatorColor: kAppHeroColor,
-                tabs: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "User top tracks",
-                      style: TextStyle(fontSize: 16),
-                    ),
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(70),
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF1A237E),
+                      Color(0xFF000000)
+                    ], // Deep Blue to Black
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "User top artists",
-                      style: TextStyle(fontSize: 16),
-                    ),
+                ),
+                child: AppBar(
+                  backgroundColor: Colors.transparent,
+                  bottom: const TabBar(
+                    indicator: BoxDecoration(),
+                    labelColor: kAppHeroColor,
+                    indicatorColor: kAppHeroColor,
+                    tabs: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          "User top tracks",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          "User top artists",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
             backgroundColor: kAppScaffoldBackgroundColor,

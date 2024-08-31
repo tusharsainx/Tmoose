@@ -279,8 +279,9 @@ class ArtistPage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => const InfoAggregatorView(
+                          Get.to(() => InfoAggregatorView(
                                 isArtistTopTracks: true,
+                                artistPageControllerId: tag,
                               ));
                         },
                         child: const Text(
@@ -404,8 +405,9 @@ class ArtistPage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => const InfoAggregatorView(
+                          Get.to(() => InfoAggregatorView(
                                 isArtistTopAlbums: true,
+                                artistPageControllerId: tag,
                               ));
                         },
                         child: const Text(
