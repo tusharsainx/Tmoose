@@ -3,30 +3,29 @@ import 'package:get/get.dart';
 import 'package:tmoose/albums/models/album_model.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/artists/repository/artist_repository.dart';
+import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 
 class ArtistViewController extends GetxController {
   ArtistModel? artistModel;
-  ArtistAlbumsModel? artistAlbums;
-  ArtistRelatedArtistsModel? artistRelatedArtistsModel;
-  ArtistTopTracksModel? artistTopTracksModel;
+  final artistAlbums = Status<ArtistAlbumsModel>.loading().obs;
+  final artistRelatedArtistsModel =
+      Status<ArtistRelatedArtistsModel>.loading().obs;
+  final artistTopTracksModel = Status<ArtistTopTracksModel>.loading().obs;
   ScrollController? scrollController;
   final ArtistsRepository _artistsRepository = ArtistsRepository();
-  final isDataLoading = false.obs;
   @override
   void onInit() {
     init();
     super.onInit();
   }
 
-  void init() async {
-    isDataLoading(true);
+  void init() {
     scrollController = ScrollController();
     artistModel = Get.arguments as ArtistModel;
-    await fetchArtistAlbums(artistId: artistModel?.artistId ?? "", limit: 50);
-    await fetchArtistTopTracks(artistId: artistModel?.artistId ?? "");
-    await fetchArtistRelatedArtists(artistId: artistModel?.artistId ?? "");
-    isDataLoading(false);
+    fetchArtistAlbums(artistId: artistModel?.artistId ?? "", limit: 50);
+    fetchArtistTopTracks(artistId: artistModel?.artistId ?? "");
+    fetchArtistRelatedArtists(artistId: artistModel?.artistId ?? "");
   }
 
   @override
@@ -63,17 +62,20 @@ class ArtistViewController extends GetxController {
     required String artistId,
     required int limit,
   }) async {
-    artistAlbums = await _artistsRepository.fetchArtistAlbums(
+    artistAlbums.value = Status.loading();
+    artistAlbums.value = await _artistsRepository.fetchArtistAlbums(
         artistId: artistId, limit: limit);
   }
 
   Future fetchArtistTopTracks({required String artistId}) async {
-    artistTopTracksModel =
+    artistTopTracksModel.value = Status.loading();
+    artistTopTracksModel.value =
         await _artistsRepository.fetchArtistTopTracks(artistId: artistId);
   }
 
   Future fetchArtistRelatedArtists({required String artistId}) async {
-    artistRelatedArtistsModel =
+    artistRelatedArtistsModel.value = Status.loading();
+    artistRelatedArtistsModel.value =
         await _artistsRepository.fetchArtistRelatedArtists(artistId: artistId);
   }
 }
