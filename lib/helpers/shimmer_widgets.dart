@@ -19,8 +19,8 @@ class HorizontalListViewBoxShimmer extends StatelessWidget {
           itemCount: 10,
           itemBuilder: (context, index) {
             return Shimmer.fromColors(
-              baseColor: const Color(0xFF424242),
-              highlightColor: const Color(0xFF616161),
+              baseColor: Colors.black,
+              highlightColor: const Color(0xff1d1d1f),
               child: Container(
                 height: height,
                 width: width,
@@ -52,8 +52,8 @@ class HorizontalListViewCircleShimmer extends StatelessWidget {
           itemCount: 10,
           itemBuilder: (context, index) {
             return Shimmer.fromColors(
-              baseColor: const Color(0xFF424242),
-              highlightColor: const Color(0xFF616161),
+              baseColor: Colors.black,
+              highlightColor: const Color(0xff1d1d1f),
               child: Container(
                 height: height,
                 width: width,
@@ -84,8 +84,8 @@ class VerticalListViewShimmer extends StatelessWidget {
           itemCount: 10,
           itemBuilder: (context, index) {
             return Shimmer.fromColors(
-              baseColor: const Color(0xFF424242),
-              highlightColor: const Color(0xFF616161),
+              baseColor: Colors.black,
+              highlightColor: const Color(0xff1d1d1f),
               child: Container(
                 height: height,
                 decoration: const BoxDecoration(
@@ -107,8 +107,8 @@ class FullDeviceWidthShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: const Color(0xFF424242),
-      highlightColor: const Color(0xFF616161),
+      baseColor: Colors.black,
+      highlightColor: const Color(0xff1d1d1f),
       child: Container(
         height: height,
         width: double.infinity,
@@ -130,8 +130,8 @@ class SizedBoxShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: const Color(0xFF424242),
-      highlightColor: const Color(0xFF616161),
+      baseColor: Colors.black,
+      highlightColor: const Color(0xff1d1d1f),
       child: Container(
         height: height,
         width: width,
