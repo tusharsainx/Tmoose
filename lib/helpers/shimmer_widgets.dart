@@ -16,7 +16,7 @@ class HorizontalListViewBoxShimmer extends StatelessWidget {
       child: ListView.separated(
           separatorBuilder: (context, index) => const SizedBox(width: 5),
           scrollDirection: Axis.horizontal,
-          itemCount: 10,
+          itemCount: 15,
           itemBuilder: (context, index) {
             return Shimmer.fromColors(
               baseColor: Colors.black,
@@ -49,7 +49,7 @@ class HorizontalListViewCircleShimmer extends StatelessWidget {
       child: ListView.separated(
           separatorBuilder: (context, index) => const SizedBox(width: 5),
           scrollDirection: Axis.horizontal,
-          itemCount: 10,
+          itemCount: 15,
           itemBuilder: (context, index) {
             return Shimmer.fromColors(
               baseColor: Colors.black,
