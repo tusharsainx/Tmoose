@@ -1,13 +1,11 @@
-import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
-import 'package:tmoose/authentication/repository/auth_repository.dart';
-import 'package:tmoose/helpers/common_headers.dart';
 import 'package:tmoose/helpers/logger.dart';
 import 'package:tmoose/network_requester/internet_down_screen.dart';
+import 'package:tmoose/network_requester/network_interceptors.dart';
 
 enum MethodType { GET, POST, PUT, DELETE }
 
@@ -22,79 +20,72 @@ abstract interface class NetworkRequesterBase {
 }
 
 class NetworkRequester implements NetworkRequesterBase {
-  Dio _dio = Dio();
-  NetworkRequester() {
-    _dio = Dio();
+  static final Dio _dio = Dio();
+  static final NetworkRequester _instance = NetworkRequester.internal();
+  factory NetworkRequester() {
+    _dio.interceptors.add(NetworkInterceptor(dio: _dio));
+    return _instance;
   }
-
+  NetworkRequester.internal();
+  bool isInternetDownVisible = false;
   @override
-  Future request(String baseUrl, String path, String methodType,
-      Map<String, dynamic>? headers, Map<String, dynamic>? data) async {
+  Future request(
+    String baseUrl,
+    String path,
+    String methodType,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? data,
+  ) async {
     try {
-      final headersForApiCall = CommonHeaders().getDefaultHeaders(headers);
       var response = await _dio.request(
         "$baseUrl$path",
         options: Options(
           method: methodType,
-          headers: headersForApiCall,
+          headers: headers,
         ),
         data: data,
       );
 
       if (response.statusCode == 200) {
         return response.data;
-      } else if (response.statusCode == 401) {
-        return await _handle401(
-          baseUrl: baseUrl,
-          methodType: methodType,
-          headers: headers,
-          path: path,
-          data: data,
-        );
       } else {
-        return null;
+        return _handleError(response.statusCode, response.data);
       }
     } on DioException catch (e) {
-      if (e.error is SocketException) {
-        //handle internet down
-        //dns looked failed
-        Get.to(() => const InternetDownScreen());
-        logger.e("error is: $e");
-      }
-      if (e.response != null) {
-        final statusCode = e.response?.statusCode;
-        final responseheaders = e.response?.headers;
-        final responseData = e.response?.data;
-        if (statusCode == 401) {
-          return await _handle401(
-            baseUrl: baseUrl,
-            methodType: methodType,
-            headers: headers,
-            path: path,
-            data: data,
-          );
-        }
-      }
-      return null;
+      return _handleDioException(e, baseUrl, path, methodType, headers, data);
     } catch (e) {
+      logger.e("Unhandled error: $e");
       return null;
     }
   }
 
-  Future _handle401(
-      {required String baseUrl,
-      required String path,
-      required String methodType,
-      required Map<String, dynamic>? headers,
-      required Map<String, dynamic>? data}) async {
-    final response =
-        await AuthenticationRepository().getAccessTokenViaRefreshToken(
-      baseUrl: baseUrl,
-      path: path,
-      prevData: data,
-      prevHeaders: headers,
-      methodType: methodType,
-    );
-    return response;
+  Future _handleDioException(
+    DioException e,
+    String baseUrl,
+    String path,
+    String methodType,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? data,
+  ) async {
+    if (e.error is SocketException) {
+      if (!isInternetDownVisible) {
+        isInternetDownVisible = true;
+        Get.to(() => const InternetDownScreen())?.then((_) {
+          isInternetDownVisible = false;
+        });
+        logger.e("Network error: $e");
+      }
+    } else if (e.response != null) {
+      final statusCode = e.response?.statusCode;
+      return _handleError(statusCode, e.response?.data);
+    }
+    logger.e("Unhandled Dio exception: $e");
+    return null;
+  }
+
+  dynamic _handleError(int? statusCode, dynamic responseData) {
+    logger
+        .e("Request failed with status: $statusCode, Response: $responseData");
+    return null;
   }
 }

@@ -6,10 +6,9 @@ import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/models/user_profile_model.dart';
 
 class UserProfileRepository {
-  final NetworkRequester _networkRequester = NetworkRequester();
   Future<Status<UserProfileModel>> fetchUserProfile() async {
     try {
-      final userProfileResponse = await _networkRequester.request(
+      final userProfileResponse = await NetworkRequester().request(
         Api.baseUrl,
         Api.userProfile,
         MethodType.GET.name,
@@ -28,7 +27,7 @@ class UserProfileRepository {
     required int items,
   }) async {
     try {
-      final topArtistsResponse = await _networkRequester.request(
+      final topArtistsResponse = await NetworkRequester().request(
         Api.baseUrl,
         "${Api.topArtists}?time_range=$timeRange&limit=$items",
         MethodType.GET.name,
@@ -48,7 +47,7 @@ class UserProfileRepository {
     required int items,
   }) async {
     try {
-      final topTracksResponse = await _networkRequester.request(
+      final topTracksResponse = await NetworkRequester().request(
         Api.baseUrl,
         "${Api.topTracks}?time_range=$timeRange&limit=$items",
         MethodType.GET.name,
@@ -64,7 +63,7 @@ class UserProfileRepository {
 
   Future<Status<CurrentPlayingTrackModel>> fetchCurrentlyPlayingTrack() async {
     try {
-      final currentPlayingTrackResponse = await _networkRequester.request(
+      final currentPlayingTrackResponse = await NetworkRequester().request(
         Api.baseUrl,
         Api.currentPlayingTracks,
         MethodType.GET.name,
@@ -81,7 +80,7 @@ class UserProfileRepository {
   Future<Status<RecentlyPlayedTracksModel>> fetchRecentlyPlayedTracks(
       {required int limit}) async {
     try {
-      final recentlyPlayedTracksResponse = await _networkRequester.request(
+      final recentlyPlayedTracksResponse = await NetworkRequester().request(
         Api.baseUrl,
         "${Api.recentlyPlayedTracks}?limit=$limit",
         MethodType.GET.name,
