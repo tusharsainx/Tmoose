@@ -43,9 +43,21 @@ class TopTracksView extends GetView<UserProfileController> {
               case ApiStatus.loading:
                 return const _Loading();
               case ApiStatus.success:
-                return const _Loaded();
+                return (controller.topTracks.value.data?.tracks ?? []).isEmpty
+                    ? GenericInfo(
+                        text: "Not found enough data to display",
+                        height: 100,
+                        width: double.infinity,
+                        onTap: () {
+                          controller.fetchTopTracks(
+                              timeRange:
+                                  controller.choosenTimeRange.value.name);
+                        },
+                      )
+                    : const _Loaded();
               case ApiStatus.error:
-                return SomethingWentWrong(
+                return GenericInfo(
+                  text: "Something went wrong",
                   height: 100,
                   width: double.infinity,
                   onTap: () {

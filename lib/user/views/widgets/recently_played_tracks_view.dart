@@ -42,9 +42,20 @@ class RecentlyPlayedTracksView extends GetView<UserProfileController> {
               case ApiStatus.loading:
                 return const _Loading();
               case ApiStatus.success:
-                return const _Loaded();
+                return (controller
+                                .recentlyPlayedTracksModel.value.data?.tracks ??
+                            [])
+                        .isEmpty
+                    ? GenericInfo(
+                        text: "Not found enough data to display",
+                        height: 100,
+                        width: double.infinity,
+                        onTap: controller.fetchRecentlyPlayedTracks,
+                      )
+                    : const _Loaded();
               case ApiStatus.error:
-                return SomethingWentWrong(
+                return GenericInfo(
+                  text: "Something went wrong",
                   height: 100,
                   width: double.infinity,
                   onTap: controller.fetchRecentlyPlayedTracks,

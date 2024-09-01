@@ -29,7 +29,8 @@ class CurrentPlayingTrackView extends GetView<UserProfileController> {
               case ApiStatus.success:
                 return const _Loaded();
               case ApiStatus.error:
-                return SomethingWentWrong(
+                return GenericInfo(
+                  text: "Something went wrong",
                   height: 50,
                   width: double.infinity,
                   onTap: controller.fetchCurrentlyPlayingTrack,

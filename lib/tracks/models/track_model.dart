@@ -97,7 +97,7 @@ class RecentlyPlayedTracksModel {
   RecentlyPlayedTracksModel({this.tracks});
   factory RecentlyPlayedTracksModel.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
-      return RecentlyPlayedTracksModel();
+      return RecentlyPlayedTracksModel(tracks: []);
     }
     final tracks = <TrackModel>[];
     final items = json["items"];
@@ -122,8 +122,9 @@ class UserTopTracksModel {
   });
 
   factory UserTopTracksModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return UserTopTracksModel(tracks: []);
     final tracks = <TrackModel>[];
-    final items = json?["items"];
+    final items = json["items"];
     if (items != null) {
       for (int i = 0; i < items.length; i++) {
         tracks.add(TrackModel.fromJson(items[i]));
@@ -145,7 +146,7 @@ class ArtistTopTracksModel {
   factory ArtistTopTracksModel.fromJson(Map<String, dynamic>? json) {
     final tracks = <TrackModel>[];
     final items = json?["tracks"];
-    if (items == null) return ArtistTopTracksModel();
+    if (items == null) return ArtistTopTracksModel(tracks: []);
     for (int i = 0; i < items.length; i++) {
       tracks.add(TrackModel.fromJson(items[i]));
     }
@@ -191,8 +192,9 @@ class RecommendedTracksModel {
   List<TrackModel>? recommendedTracks;
   RecommendedTracksModel({this.recommendedTracks});
   factory RecommendedTracksModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return RecommendedTracksModel(recommendedTracks: []);
     final tracks = <TrackModel>[];
-    final items = json?["tracks"];
+    final items = json["tracks"];
     if (items == null) return RecommendedTracksModel();
     for (int i = 0; i < items.length; i++) {
       tracks.add(TrackModel.fromJson(items[i]));

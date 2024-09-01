@@ -43,9 +43,21 @@ class TopArtistsView extends GetView<UserProfileController> {
               case ApiStatus.loading:
                 return const _Loading();
               case ApiStatus.success:
-                return const _Loaded();
+                return (controller.topArtists.value.data?.artists ?? []).isEmpty
+                    ? GenericInfo(
+                        height: 100,
+                        width: double.infinity,
+                        onTap: () {
+                          controller.fetchTopArtists(
+                              timeRange:
+                                  controller.choosenTimeRange.value.name);
+                        },
+                        text: "Not found enough data to display",
+                      )
+                    : const _Loaded();
               case ApiStatus.error:
-                return SomethingWentWrong(
+                return GenericInfo(
+                  text: "Something went wrong",
                   height: 100,
                   width: double.infinity,
                   onTap: () {
