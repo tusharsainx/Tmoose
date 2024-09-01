@@ -6,15 +6,15 @@ import 'package:tmoose/routes/app_routes.dart';
 import 'package:uni_links/uni_links.dart';
 
 class RedirectUriListener {
+  static final AuthenticationRepository _authenticationRepository =
+      AuthenticationRepository();
   static StreamSubscription? _urlStreamSubscription;
   static void init() {
     _urlStreamSubscription = uriLinkStream.listen((Uri? uri) {
       if (uri != null) {
-        logger.i("uri path ${uri.queryParameters}");
         final queryParams = uri.queryParameters;
         if (queryParams.containsKey("code")) {
           String authCode = queryParams["code"] ?? "";
-          logger.i("auth token is $authCode");
           _handleAccessTokenFetching(authCode);
         } else if (queryParams.containsKey("error")) {
           String error = queryParams["error"] ?? "";
@@ -25,7 +25,7 @@ class RedirectUriListener {
   }
 
   static void _handleAccessTokenFetching(String authCode) async {
-    await AuthenticationRepository().requestAccessToken(authCode);
+    await _authenticationRepository.requestAccessToken(authCode);
     _navigationToHome();
   }
 

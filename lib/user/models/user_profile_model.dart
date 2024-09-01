@@ -10,11 +10,12 @@ class UserProfileModel {
     this.userSpotifyProfile,
   });
   factory UserProfileModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return UserProfileModel();
     return UserProfileModel(
-      name: json?["display_name"],
-      image: json?["images"]?[0]["url"],
-      userSpotifyProfile: json?["external_urls"]?["spotify"],
-      followers: json?["followers"]?["total"]?.toString(),
+      name: json["display_name"],
+      image: json["images"]?[0]["url"],
+      userSpotifyProfile: json["external_urls"]?["spotify"],
+      followers: json["followers"]?["total"]?.toString(),
     );
   }
 }

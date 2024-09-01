@@ -96,8 +96,11 @@ class RecentlyPlayedTracksModel {
   List<TrackModel>? tracks;
   RecentlyPlayedTracksModel({this.tracks});
   factory RecentlyPlayedTracksModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return RecentlyPlayedTracksModel();
+    }
     final tracks = <TrackModel>[];
-    final items = json?["items"];
+    final items = json["items"];
     if (items != null) {
       for (int i = 0; i < items.length; i++) {
         TrackModel currModel = TrackModel.fromJson(items[i]?["track"]);

@@ -79,14 +79,12 @@ class UserProfileController extends GetxController {
     topArtists.value = Status.loading();
     topArtists.value = await _userProfileRepository.fetchTopArtists(
         timeRange: timeRange, items: items);
-    logger.i("top artists: $topArtists");
   }
 
   Future fetchTopTracks({required String timeRange, required int items}) async {
     topTracks.value = Status.loading();
     topTracks.value = await _userProfileRepository.fetchTopTracks(
         timeRange: timeRange, items: items);
-    logger.i("top tracks: $topTracks");
   }
 
   Future fetchRecentlyPlayedTracks({required int limit}) async {
