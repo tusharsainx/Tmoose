@@ -21,7 +21,13 @@ class UserDetailsView extends GetView<UserProfileController> {
         case ApiStatus.success:
           return const _Loaded();
         case ApiStatus.error:
-          return const SomethingWentWrong();
+          return SomethingWentWrong(
+            height: 100,
+            width: 100,
+            onTap: () {
+              controller.fetchUserProfile();
+            },
+          );
         case ApiStatus.none:
           return const SizedBox();
       }

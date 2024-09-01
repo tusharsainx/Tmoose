@@ -13,18 +13,53 @@ class TopTracksView extends GetView<UserProfileController> {
   const TopTracksView({super.key});
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      switch (controller.topTracks.value.apiStatus) {
-        case ApiStatus.loading:
-          return const _Loading();
-        case ApiStatus.success:
-          return const _Loaded();
-        case ApiStatus.error:
-          return const SomethingWentWrong();
-        case ApiStatus.none:
-          return const SizedBox();
-      }
-    });
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Top tracks",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            GestureDetector(
+              onTap: () {
+                Get.to(() => const InfoAggregatorView(
+                      isArtistTopTracks: true,
+                    ));
+              },
+              child: const Text(
+                "View more",
+                style: TextStyle(fontSize: 14, color: Color(0xff87CEEB)),
+              ),
+            ),
+          ],
+        ),
+        Obx(
+          () {
+            switch (controller.topTracks.value.apiStatus) {
+              case ApiStatus.loading:
+                return const _Loading();
+              case ApiStatus.success:
+                return const _Loaded();
+              case ApiStatus.error:
+                return SomethingWentWrong(
+                  height: 100,
+                  width: double.infinity,
+                  onTap: () {
+                    controller.fetchTopTracks(
+                        timeRange: controller.choosenTimeRange.value.name);
+                  },
+                );
+              case ApiStatus.none:
+                return const SizedBox();
+            }
+          },
+        ),
+      ],
+    );
   }
 }
 
@@ -37,13 +72,6 @@ class _Loading extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBoxShimmer(width: 200, height: 16),
-            SizedBoxShimmer(width: 100, height: 16),
-          ],
-        ),
         SizedBox(height: 10),
         SizedBox(
           height: 150, // Adjust height as needed
@@ -69,26 +97,6 @@ class _Loaded extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              "Top tracks",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            GestureDetector(
-              onTap: () {
-                Get.to(() => const InfoAggregatorView(
-                      isArtistTopTracks: true,
-                    ));
-              },
-              child: const Text(
-                "View more",
-                style: TextStyle(fontSize: 14, color: Color(0xff87CEEB)),
-              ),
-            ),
-          ],
-        ),
         const SizedBox(height: 10),
         SizedBox(
           height: 150, // Adjust height as needed

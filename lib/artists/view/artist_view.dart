@@ -13,6 +13,7 @@ import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
+import 'package:tmoose/user/helper/something_went_wrong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ArtistPage extends StatelessWidget {
@@ -173,125 +174,145 @@ class ArtistPage extends StatelessWidget {
                                 ),
                                 SizedBoxShimmer(width: Get.width, height: 50),
                               ])
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              for (int i = 0;
-                                  i <
-                                          (controller.artistTopTracksModel.value
-                                                      .data?.tracks ??
-                                                  [])
-                                              .length &&
-                                      i < 2;
-                                  i++) ...[
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Get.toNamed(
-                                      AppRoutes.track,
-                                      arguments: controller.artistTopTracksModel
-                                              .value.data?.tracks?[i] ??
-                                          TrackModel(),
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xff1d1d1f),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20, 10, 10, 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            "${i + 1}",
-                                            style: const TextStyle(
-                                                color: Color(0xff87CEEB),
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                        : controller.artistTopTracksModel.value.apiStatus ==
+                                ApiStatus.error
+                            ? SomethingWentWrong(
+                                height: 100,
+                                width: double.infinity,
+                                onTap: () async {
+                                  await controller.fetchArtistTopTracks(
+                                      artistId:
+                                          controller.artistModel?.artistId ??
+                                              "");
+                                },
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  for (int i = 0;
+                                      i <
+                                              (controller.artistTopTracksModel
+                                                          .value.data?.tracks ??
+                                                      [])
+                                                  .length &&
+                                          i < 2;
+                                      i++) ...[
+                                    GestureDetector(
+                                      onTap: () async {
+                                        await Get.toNamed(
+                                          AppRoutes.track,
+                                          arguments: controller
+                                                  .artistTopTracksModel
+                                                  .value
+                                                  .data
+                                                  ?.tracks?[i] ??
+                                              TrackModel(),
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xff1d1d1f),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              20, 10, 10, 10),
+                                          child: Row(
                                             children: [
-                                              SizedBox(
-                                                width: Get.width * 0.60,
-                                                child: Text(
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.fade,
-                                                  controller
-                                                          .artistTopTracksModel
-                                                          .value
-                                                          .data
-                                                          ?.tracks?[i]
-                                                          .trackName ??
-                                                      "",
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18),
-                                                ),
+                                              Text(
+                                                "${i + 1}",
+                                                style: const TextStyle(
+                                                    color: Color(0xff87CEEB),
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              SizedBox(
-                                                width: Get.width * 0.60,
-                                                child: Text(
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.fade,
-                                                  controller.getArtistNames(
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    width: Get.width * 0.60,
+                                                    child: Text(
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.fade,
                                                       controller
-                                                          .artistTopTracksModel
-                                                          .value
-                                                          .data
-                                                          ?.tracks?[i]
-                                                          .artists),
-                                                  style: const TextStyle(
-                                                      color: Colors.grey),
-                                                ),
+                                                              .artistTopTracksModel
+                                                              .value
+                                                              .data
+                                                              ?.tracks?[i]
+                                                              .trackName ??
+                                                          "",
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: Get.width * 0.60,
+                                                    child: Text(
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.fade,
+                                                      controller.getArtistNames(
+                                                          controller
+                                                              .artistTopTracksModel
+                                                              .value
+                                                              .data
+                                                              ?.tracks?[i]
+                                                              .artists),
+                                                      style: const TextStyle(
+                                                          color: Colors.grey),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const Spacer(),
+                                              CachedNetworkImage(
+                                                imageUrl: controller
+                                                        .artistTopTracksModel
+                                                        .value
+                                                        .data
+                                                        ?.tracks?[i]
+                                                        .backgroundImage ??
+                                                    "",
+                                                errorWidget:
+                                                    (context, url, error) {
+                                                  return const SizedBoxShimmer(
+                                                      width: 50, height: 50);
+                                                },
+                                                imageBuilder:
+                                                    (context, imageProvider) {
+                                                  return Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    )),
+                                                  );
+                                                },
                                               ),
                                             ],
                                           ),
-                                          const Spacer(),
-                                          CachedNetworkImage(
-                                            imageUrl: controller
-                                                    .artistTopTracksModel
-                                                    .value
-                                                    .data
-                                                    ?.tracks?[i]
-                                                    .backgroundImage ??
-                                                "",
-                                            errorWidget: (context, url, error) {
-                                              return const SizedBoxShimmer(
-                                                  width: 50, height: 50);
-                                            },
-                                            imageBuilder:
-                                                (context, imageProvider) {
-                                              return Container(
-                                                height: 50,
-                                                width: 50,
-                                                decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                )),
-                                              );
-                                            },
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                            ],
-                          );
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ],
+                              );
                   }),
                   Obx(
                     () {
@@ -338,127 +359,148 @@ class ArtistPage extends StatelessWidget {
                                 SizedBoxShimmer(width: Get.width, height: 50),
                               ],
                             )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                for (int i = 0;
-                                    i <
-                                            (controller.artistAlbums.value.data
-                                                        ?.albums ??
-                                                    [])
-                                                .length &&
-                                        i < 2;
-                                    i++) ...[
-                                  GestureDetector(
-                                    onTap: () async {
-                                      await launchUrl(Uri.parse(controller
-                                              .artistAlbums
-                                              .value
-                                              .data
-                                              ?.albums?[i]
-                                              .albumSpotifyLink ??
-                                          ""));
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xff1d1d1f),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            20, 10, 10, 10),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "${i + 1}",
-                                              style: const TextStyle(
-                                                  color: Color(0xff87CEEB),
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                          : controller.artistAlbums.value.apiStatus ==
+                                  ApiStatus.error
+                              ? SomethingWentWrong(
+                                  height: 100,
+                                  width: double.infinity,
+                                  onTap: () async {
+                                    await controller.fetchArtistAlbums(
+                                      limit: 50,
+                                      artistId:
+                                          controller.artistModel?.artistId ??
+                                              "",
+                                    );
+                                  },
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    for (int i = 0;
+                                        i <
+                                                (controller.artistAlbums.value
+                                                            .data?.albums ??
+                                                        [])
+                                                    .length &&
+                                            i < 2;
+                                        i++) ...[
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await launchUrl(Uri.parse(controller
+                                                  .artistAlbums
+                                                  .value
+                                                  .data
+                                                  ?.albums?[i]
+                                                  .albumSpotifyLink ??
+                                              ""));
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xff1d1d1f),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                20, 10, 10, 10),
+                                            child: Row(
                                               children: [
-                                                SizedBox(
-                                                  width: Get.width * 0.60,
-                                                  child: Text(
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.fade,
-                                                    controller
-                                                            .artistAlbums
-                                                            .value
-                                                            .data
-                                                            ?.albums?[i]
-                                                            .albumName ??
-                                                        "",
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
+                                                Text(
+                                                  "${i + 1}",
+                                                  style: const TextStyle(
+                                                      color: Color(0xff87CEEB),
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
-                                                SizedBox(
-                                                  width: Get.width * 0.60,
-                                                  child: Text(
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.fade,
-                                                    controller.getArtistNames(
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: Get.width * 0.60,
+                                                      child: Text(
+                                                        maxLines: 1,
+                                                        overflow:
+                                                            TextOverflow.fade,
                                                         controller
-                                                            .artistAlbums
-                                                            .value
-                                                            .data
-                                                            ?.albums?[i]
-                                                            .artists),
-                                                    style: const TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
+                                                                .artistAlbums
+                                                                .value
+                                                                .data
+                                                                ?.albums?[i]
+                                                                .albumName ??
+                                                            "",
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: Get.width * 0.60,
+                                                      child: Text(
+                                                        maxLines: 1,
+                                                        overflow:
+                                                            TextOverflow.fade,
+                                                        controller
+                                                            .getArtistNames(
+                                                                controller
+                                                                    .artistAlbums
+                                                                    .value
+                                                                    .data
+                                                                    ?.albums?[i]
+                                                                    .artists),
+                                                        style: const TextStyle(
+                                                            color: Colors.grey),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Spacer(),
+                                                CachedNetworkImage(
+                                                  imageUrl: controller
+                                                          .artistAlbums
+                                                          .value
+                                                          .data
+                                                          ?.albums?[i]
+                                                          .imageUrl ??
+                                                      "",
+                                                  errorWidget:
+                                                      (context, url, error) {
+                                                    return const SizedBoxShimmer(
+                                                        width: 50, height: 50);
+                                                  },
+                                                  imageBuilder:
+                                                      (context, imageProvider) {
+                                                    return Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      decoration: BoxDecoration(
+                                                          image:
+                                                              DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                      )),
+                                                    );
+                                                  },
                                                 ),
                                               ],
                                             ),
-                                            const Spacer(),
-                                            CachedNetworkImage(
-                                              imageUrl: controller
-                                                      .artistAlbums
-                                                      .value
-                                                      .data
-                                                      ?.albums?[i]
-                                                      .imageUrl ??
-                                                  "",
-                                              errorWidget:
-                                                  (context, url, error) {
-                                                return const SizedBoxShimmer(
-                                                    width: 50, height: 50);
-                                              },
-                                              imageBuilder:
-                                                  (context, imageProvider) {
-                                                return Container(
-                                                  height: 50,
-                                                  width: 50,
-                                                  decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                    image: imageProvider,
-                                                    fit: BoxFit.cover,
-                                                  )),
-                                                );
-                                              },
-                                            ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              ],
-                            );
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  ],
+                                );
                     },
                   ),
                   Obx(
@@ -505,84 +547,107 @@ class ArtistPage extends StatelessWidget {
                               height: 100,
                               width: 100,
                             )
-                          : SizedBox(
-                              height: 150, // Adjust height as needed
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: (controller.artistRelatedArtistsModel
+                          : controller.artistRelatedArtistsModel.value
+                                      .apiStatus ==
+                                  ApiStatus.error
+                              ? SomethingWentWrong(
+                                  height: 150,
+                                  width: double.infinity,
+                                  onTap: () async {
+                                    await controller.fetchArtistRelatedArtists(
+                                      artistId:
+                                          controller.artistModel?.artistId ??
+                                              "",
+                                    );
+                                  },
+                                )
+                              : SizedBox(
+                                  height: 150, // Adjust height as needed
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: (controller
+                                                    .artistRelatedArtistsModel
+                                                    .value
+                                                    .data
+                                                    ?.artists
+                                                    ?.length ??
+                                                0) >
+                                            10
+                                        ? 10
+                                        : (controller.artistRelatedArtistsModel
                                                 .value.data?.artists?.length ??
-                                            0) >
-                                        10
-                                    ? 10
-                                    : (controller.artistRelatedArtistsModel
-                                            .value.data?.artists?.length ??
-                                        0),
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () async {
-                                      ArtistPageHelper.setUniqueId();
-                                      final artistModel = controller
-                                              .artistRelatedArtistsModel
-                                              .value
-                                              .data
-                                              ?.artists?[index] ??
-                                          ArtistModel();
-                                      await Get.toNamed(
-                                        AppRoutes.artist,
-                                        arguments: artistModel,
-                                        preventDuplicates: false,
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CachedNetworkImage(
-                                          imageUrl: controller
+                                            0),
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          ArtistPageHelper.setUniqueId();
+                                          final artistModel = controller
                                                   .artistRelatedArtistsModel
                                                   .value
                                                   .data
-                                                  ?.artists?[index]
-                                                  .imageUrl ??
-                                              "",
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
-                                            height: 100,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: const Color(0xff87CEEB),
-                                              ),
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
+                                                  ?.artists?[index] ??
+                                              ArtistModel();
+                                          await Get.toNamed(
+                                            AppRoutes.artist,
+                                            arguments: artistModel,
+                                            preventDuplicates: false,
+                                          );
+                                        },
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              height: 100,
+                                              width: 100,
+                                              child: CachedNetworkImage(
+                                                imageUrl: controller
+                                                        .artistRelatedArtistsModel
+                                                        .value
+                                                        .data
+                                                        ?.artists?[index]
+                                                        .imageUrl ??
+                                                    "",
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  height: 100,
+                                                  width: 100,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: const Color(
+                                                          0xff87CEEB),
+                                                    ),
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                            const SizedBox(height: 8),
+                                            SizedBox(
+                                              width: 100,
+                                              child: Text(
+                                                "${index + 1}. ${controller.artistRelatedArtistsModel.value.data?.artists?[index].artistName}",
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.fade,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 8),
-                                        SizedBox(
-                                          width: 100,
-                                          child: Text(
-                                            "${index + 1}. ${controller.artistRelatedArtistsModel.value.data?.artists?[index].artistName}",
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.fade,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                separatorBuilder: (context, index) {
-                                  return const SizedBox(width: 10);
-                                },
-                              ),
-                            );
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return const SizedBox(width: 10);
+                                    },
+                                  ),
+                                );
                     },
                   ),
                   Obx(

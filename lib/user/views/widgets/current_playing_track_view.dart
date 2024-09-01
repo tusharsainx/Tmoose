@@ -13,18 +13,34 @@ class CurrentPlayingTrackView extends GetView<UserProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      switch (controller.currentPlayingTrackModel.value.apiStatus) {
-        case ApiStatus.loading:
-          return const _Loading();
-        case ApiStatus.success:
-          return const _Loaded();
-        case ApiStatus.error:
-          return const SomethingWentWrong();
-        case ApiStatus.none:
-          return const SizedBox();
-      }
-    });
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          "Currently playing",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        Obx(
+          () {
+            switch (controller.currentPlayingTrackModel.value.apiStatus) {
+              case ApiStatus.loading:
+                return const _Loading();
+              case ApiStatus.success:
+                return const _Loaded();
+              case ApiStatus.error:
+                return SomethingWentWrong(
+                  height: 50,
+                  width: double.infinity,
+                  onTap: controller.fetchCurrentlyPlayingTrack,
+                );
+              case ApiStatus.none:
+                return const SizedBox();
+            }
+          },
+        ),
+      ],
+    );
   }
 }
 
@@ -37,10 +53,6 @@ class _Loading extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBoxShimmer(
-          width: 200,
-          height: 18,
-        ),
         SizedBox(height: 10),
         Row(
           children: [
@@ -76,10 +88,6 @@ class _Loaded extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Currently playing",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
           const SizedBox(height: 10),
           GestureDetector(
             onTap: () {
