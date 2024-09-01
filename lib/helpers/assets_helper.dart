@@ -5,4 +5,6 @@ class AssetsHelper {
   static const String spotifyLogo = "$_svgs/spotify_logo.svg";
   static const String spotifyLogoGreen = "$_svgs/spotify_logo_green.svg";
   static const String internetDown = "$_svgs/internet_down.svg";
+  static const String serverDown = "$_svgs/server_down.svg";
+  static const String serverUnavailable = "$_svgs/server_unavailable.svg";
 }

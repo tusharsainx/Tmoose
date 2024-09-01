@@ -6,6 +6,7 @@ import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/helpers/artist_page_helper.dart';
 import 'package:tmoose/helpers/colors.dart';
 import 'package:tmoose/routes/app_routes.dart';
+import 'package:tmoose/user/helper/something_went_wrong.dart';
 
 class ArtistRelatedArtistsBottomsheet {
   static Future<void> show(
@@ -48,61 +49,88 @@ class ArtistRelatedArtistsBottomsheet {
                   const SizedBox(
                     height: 15,
                   ),
-                  ListView.separated(
-                      shrinkWrap: true,
-                      physics: const ClampingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                            onTap: () async {
-                              ArtistPageHelper.setUniqueId();
-                              await Get.toNamed(
-                                preventDuplicates: false,
-                                AppRoutes.artist,
-                                arguments: controller.artistRelatedArtistsModel
-                                        .value.data?.artists?[index] ??
-                                    ArtistModel(),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: CachedNetworkImage(
-                                    imageUrl: controller
-                                            .artistRelatedArtistsModel
-                                            .value
-                                            .data
-                                            ?.artists?[index]
-                                            .imageUrl ??
-                                        "",
-                                    errorWidget: (context, url, error) =>
-                                        const SizedBox(),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  controller.artistRelatedArtistsModel.value
-                                          .data?.artists?[index].artistName ??
-                                      "",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              ],
-                            ));
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(
-                          height: 15,
-                        );
-                      },
-                      itemCount: controller.artistRelatedArtistsModel.value.data
-                              ?.artists?.length ??
-                          0),
+                  Obx(
+                    () {
+                      return (controller.artistRelatedArtistsModel.value.data
+                                      ?.artists ??
+                                  [])
+                              .isEmpty
+                          ? GenericInfo(
+                              text: "Not found enough data to display",
+                              height: 150,
+                              width: double.infinity,
+                              onTap: () async {
+                                await controller.fetchArtistRelatedArtists(
+                                  artistId:
+                                      controller.artistModel?.artistId ?? "",
+                                );
+                              },
+                            )
+                          : ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                    onTap: () async {
+                                      ArtistPageHelper.setUniqueId();
+                                      await Get.toNamed(
+                                        preventDuplicates: false,
+                                        AppRoutes.artist,
+                                        arguments: controller
+                                                .artistRelatedArtistsModel
+                                                .value
+                                                .data
+                                                ?.artists?[index] ??
+                                            ArtistModel(),
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 50,
+                                          width: 50,
+                                          child: CachedNetworkImage(
+                                            imageUrl: controller
+                                                    .artistRelatedArtistsModel
+                                                    .value
+                                                    .data
+                                                    ?.artists?[index]
+                                                    .imageUrl ??
+                                                "",
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const SizedBox(),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          controller
+                                                  .artistRelatedArtistsModel
+                                                  .value
+                                                  .data
+                                                  ?.artists?[index]
+                                                  .artistName ??
+                                              "",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
+                                      ],
+                                    ));
+                              },
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(
+                                  height: 15,
+                                );
+                              },
+                              itemCount: controller.artistRelatedArtistsModel
+                                      .value.data?.artists?.length ??
+                                  0);
+                    },
+                  ),
                 ],
               ),
             ),
