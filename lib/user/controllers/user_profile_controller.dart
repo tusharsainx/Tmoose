@@ -40,12 +40,9 @@ class UserProfileController extends GetxController {
   Future<void> init() async {
     initTracksAndArtists(
       timeRange: choosenTimeRange.value.name,
-      items: 50,
     );
     fetchUserProfile();
-    fetchRecentlyPlayedTracks(
-      limit: 50,
-    );
+    fetchRecentlyPlayedTracks();
     fetchCurrentlyPlayingTrack();
   }
 
@@ -53,18 +50,17 @@ class UserProfileController extends GetxController {
     isScrolledSpecificHeight(false);
     initTracksAndArtists(
       timeRange: choosenTimeRange.value.name,
-      items: items,
     );
   }
 
-  void initTracksAndArtists({required String timeRange, required int items}) {
+  void initTracksAndArtists({
+    required String timeRange,
+  }) {
     fetchTopArtists(
       timeRange: timeRange,
-      items: items,
     );
     fetchTopTracks(
       timeRange: timeRange,
-      items: items,
     );
   }
 
@@ -74,23 +70,26 @@ class UserProfileController extends GetxController {
     super.onClose();
   }
 
-  Future fetchTopArtists(
-      {required String timeRange, required int items}) async {
+  Future fetchTopArtists({required String timeRange}) async {
     topArtists.value = Status.loading();
     topArtists.value = await _userProfileRepository.fetchTopArtists(
-        timeRange: timeRange, items: items);
+      timeRange: timeRange,
+      items: 50,
+    );
   }
 
-  Future fetchTopTracks({required String timeRange, required int items}) async {
+  Future fetchTopTracks({required String timeRange}) async {
     topTracks.value = Status.loading();
     topTracks.value = await _userProfileRepository.fetchTopTracks(
-        timeRange: timeRange, items: items);
+      timeRange: timeRange,
+      items: 50,
+    );
   }
 
-  Future fetchRecentlyPlayedTracks({required int limit}) async {
+  Future fetchRecentlyPlayedTracks() async {
     recentlyPlayedTracksModel.value = Status.loading();
     recentlyPlayedTracksModel.value =
-        await _userProfileRepository.fetchRecentlyPlayedTracks(limit: limit);
+        await _userProfileRepository.fetchRecentlyPlayedTracks(limit: 50);
   }
 
   Future fetchCurrentlyPlayingTrack() async {

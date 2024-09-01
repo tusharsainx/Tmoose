@@ -14,18 +14,59 @@ class RecentlyPlayedTracksView extends GetView<UserProfileController> {
   const RecentlyPlayedTracksView({super.key});
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      switch (controller.recentlyPlayedTracksModel.value.apiStatus) {
-        case ApiStatus.loading:
-          return const _Loading();
-        case ApiStatus.success:
-          return const _Loaded();
-        case ApiStatus.error:
-          return const SomethingWentWrong();
-        case ApiStatus.none:
-          return const SizedBox();
-      }
-    });
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Recently played",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            GestureDetector(
+              onTap: () async {
+                await RecentlyPlayedTracksBottomsheet.show(context: context);
+              },
+              child: const Text(
+                "View more",
+                style: TextStyle(fontSize: 14, color: Color(0xff87CEEB)),
+              ),
+            ),
+          ],
+        ),
+        Obx(
+          () {
+            switch (controller.recentlyPlayedTracksModel.value.apiStatus) {
+              case ApiStatus.loading:
+                return const _Loading();
+              case ApiStatus.success:
+                return (controller
+                                .recentlyPlayedTracksModel.value.data?.tracks ??
+                            [])
+                        .isEmpty
+                    ? GenericInfo(
+                        text: "Not found enough data to display",
+                        height: 100,
+                        width: double.infinity,
+                        onTap: controller.fetchRecentlyPlayedTracks,
+                      )
+                    : const _Loaded();
+              case ApiStatus.error:
+                return GenericInfo(
+                  text: "Something went wrong",
+                  height: 100,
+                  width: double.infinity,
+                  onTap: controller.fetchRecentlyPlayedTracks,
+                );
+              case ApiStatus.none:
+                return const SizedBox();
+            }
+          },
+        ),
+      ],
+    );
   }
 }
 
@@ -38,13 +79,6 @@ class _Loading extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBoxShimmer(width: 200, height: 18),
-            SizedBoxShimmer(width: 100, height: 14),
-          ],
-        ),
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -86,24 +120,6 @@ class _Loaded extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              "Recently played",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            GestureDetector(
-              onTap: () async {
-                await RecentlyPlayedTracksBottomsheet.show(context: context);
-              },
-              child: const Text(
-                "View more",
-                style: TextStyle(fontSize: 14, color: Color(0xff87CEEB)),
-              ),
-            ),
-          ],
-        ),
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),

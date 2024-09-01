@@ -34,7 +34,6 @@ class UserProfileRepository {
         null,
         null,
       );
-
       return Status.success(
           data: UserTopArtistsModel.fromJson(topArtistsResponse));
     } catch (e) {
