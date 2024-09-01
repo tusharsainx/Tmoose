@@ -21,7 +21,8 @@ class UserDetailsView extends GetView<UserProfileController> {
         case ApiStatus.success:
           return const _Loaded();
         case ApiStatus.error:
-          return SomethingWentWrong(
+          return GenericInfo(
+                  text: "Something went wrong",
             height: 100,
             width: 100,
             onTap: () {

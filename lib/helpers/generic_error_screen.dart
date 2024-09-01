@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:tmoose/helpers/assets_helper.dart';
 
-class InternetDownScreen extends StatelessWidget {
-  const InternetDownScreen({super.key});
-
+class GenericErrorScreen extends StatelessWidget {
+  const GenericErrorScreen({
+    super.key,
+    required this.description,
+    required this.imagePath,
+    required this.title,
+  });
+  final String title;
+  final String description;
+  final String imagePath;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,22 +48,23 @@ class InternetDownScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 120,
-                width: 120,
-                child: SvgPicture.asset(AssetsHelper.internetDown),
+                height: 200,
+                width: 200,
+                child: SvgPicture.asset(imagePath),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Network issue!",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              Text(
+                title,
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                "We have received Socket Exception, saying host lookup failed, make sure you are connected to good internet.",
+              Text(
+                description,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
