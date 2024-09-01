@@ -62,9 +62,10 @@ class UserTopArtistsModel {
   UserTopArtistsModel({this.artists});
 
   factory UserTopArtistsModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return UserTopArtistsModel(artists: []);
     final artists = <ArtistModel>[];
-    final items = json?["items"];
-    if (items == null) return UserTopArtistsModel();
+    final items = json["items"];
+    if (items == null) return UserTopArtistsModel(artists: []);
 
     for (int i = 0; i < items.length; i++) {
       artists.add(ArtistModel.fromJson(items[i]));
@@ -79,9 +80,10 @@ class ArtistRelatedArtistsModel {
   ArtistRelatedArtistsModel({this.artists});
 
   factory ArtistRelatedArtistsModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return ArtistRelatedArtistsModel(artists: []);
     final artists = <ArtistModel>[];
-    final items = json?["artists"];
-    if (items == null) return ArtistRelatedArtistsModel();
+    final items = json["artists"];
+    if (items == null) return ArtistRelatedArtistsModel(artists: []);
 
     for (int i = 0; i < items.length; i++) {
       artists.add(ArtistModel.fromJson(items[i]));
