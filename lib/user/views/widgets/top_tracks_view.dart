@@ -136,6 +136,10 @@ class _Loaded extends StatelessWidget {
                         imageUrl: controller.topTracks.value.data
                                 ?.tracks?[index].backgroundImage ??
                             "",
+                        errorWidget: (context, url, error) => const SizedBox(
+                          width: 100,
+                          height: 100,
+                        ),
                         imageBuilder: (context, imageProvider) => Container(
                           height: 100,
                           width: 100,

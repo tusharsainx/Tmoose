@@ -113,6 +113,10 @@ class InfoAggregatorView extends StatelessWidget {
                             const SizedBox(width: 10),
                             CachedNetworkImage(
                               width: 70,
+                              errorWidget: (context, url, error) =>
+                                  const SizedBox(
+                                width: 70,
+                              ),
                               imageUrl: artistViewController
                                       .artistTopTracksModel
                                       .value
@@ -213,6 +217,10 @@ class InfoAggregatorView extends StatelessWidget {
                               imageUrl: artistViewController.artistAlbums.value
                                       .data?.albums?[index].imageUrl ??
                                   "",
+                              errorWidget: (context, url, error) =>
+                                  const SizedBox(
+                                width: 70,
+                              ),
                             ),
                             const SizedBox(
                               width: 10,
@@ -460,6 +468,10 @@ class InfoAggregatorView extends StatelessWidget {
                                                   ?.tracks?[index]
                                                   .backgroundImage ??
                                               "",
+                                          errorWidget: (context, url, error) =>
+                                              const SizedBox(
+                                            width: 70,
+                                          ),
                                         ),
                                         const SizedBox(
                                           width: 10,
@@ -570,6 +582,10 @@ class InfoAggregatorView extends StatelessWidget {
                                                 ?.artists?[index]
                                                 .imageUrl ??
                                             "",
+                                        errorWidget: (context, url, error) =>
+                                            const SizedBox(
+                                          width: 70,
+                                        ),
                                       ),
                                       const SizedBox(
                                         width: 10,

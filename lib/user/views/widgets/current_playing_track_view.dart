@@ -116,6 +116,10 @@ class _Loaded extends StatelessWidget {
                         ),
                       );
                     },
+                    errorWidget: (context, url, error) => const SizedBox(
+                      width: 50,
+                      height: 50,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),

@@ -29,7 +29,11 @@ class TrackModel {
     final trackId = json?["id"];
     final previewUrl = json?["preview_url"];
     final trackSpotifyLink = json?["external_urls"]?["spotify"];
-    final backgroundImage = json?["album"]?["images"]?[0]?["url"];
+    String backgroundImage = "";
+    final images = json?["album"]?["images"];
+    if (images != null && (images is List)) {
+      if (images.isNotEmpty) backgroundImage = (images[0]?["url"]) ?? "";
+    }
     final artists = json?["artists"];
     final artistModels = <ArtistModelBase>[];
     final album = AlbumModel.fromJson(json?["album"]);

@@ -138,8 +138,10 @@ class _Loaded extends StatelessWidget {
                         const CircularProgressIndicator(
                       color: Color(0xff87CEEB),
                     ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                    errorWidget: (context, url, error) => const SizedBox(
+                      width: 50,
+                      height: 50,
+                    ),
                     imageBuilder: (context, imageProvider) {
                       return Container(
                         height: 50,
