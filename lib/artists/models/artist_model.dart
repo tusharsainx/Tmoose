@@ -43,7 +43,10 @@ class ArtistModel extends ArtistModelBase {
     final name = json?["name"];
     final popularity = json?["popularity"];
     final images = json?["images"];
-    final imageUrl = images?[0]["url"];
+    String imageUrl = "";
+    if (images != null && (images is List)) {
+      if (images.isNotEmpty) imageUrl = (images[0]?["url"]) ?? "";
+    }
     return ArtistModel(
       artistId: artistId,
       artistName: name,

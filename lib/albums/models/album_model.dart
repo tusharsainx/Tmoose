@@ -24,7 +24,11 @@ class AlbumModel {
         singers.add(ArtistModelBase.fromJson(artists[i]));
       }
     }
-    final imageUrl = json["images"]?[0]["url"];
+    final images = json["images"];
+    String imageUrl = "";
+    if (images != null && (images is List)) {
+      if (images.isNotEmpty) imageUrl = (images[0]?["url"]) ?? "";
+    }
     return AlbumModel(
       artists: singers,
       imageUrl: imageUrl,

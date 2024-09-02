@@ -130,6 +130,10 @@ class _Loaded extends StatelessWidget {
                     SizedBox(
                       height: 100,
                       child: CachedNetworkImage(
+                        errorWidget: (context, url, error) => const SizedBox(
+                          width: 100,
+                          height: 100,
+                        ),
                         imageUrl: controller.topArtists.value.data
                                 ?.artists?[index].imageUrl ??
                             "",
