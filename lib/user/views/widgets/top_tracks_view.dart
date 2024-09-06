@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
 import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/info_aggregator/info_aggregator_view.dart';
@@ -121,7 +122,9 @@ class _Loaded extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
+                  TrackPageHelper.setUniqueId();
                   Get.toNamed(AppRoutes.track,
+                      preventDuplicates: false,
                       arguments:
                           (controller.topTracks.value.data?.tracks?[index]) ??
                               TrackModel());

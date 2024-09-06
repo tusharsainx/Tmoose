@@ -1,10 +1,11 @@
+import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/network_requester/apis.dart';
 import 'package:tmoose/network_requester/network_request_helper.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 
 class TracksRepository {
   final NetworkRequester _networkRequester = NetworkRequester();
-  Future<TrackAudioFeaturesModel?> findTrackAudioAnalysis(
+  Future<Status<TrackAudioFeaturesModel>> findTrackAudioAnalysis(
       {required String trackId}) async {
     try {
       final trackAudioFeaturesResponse = await _networkRequester.request(
@@ -14,9 +15,10 @@ class TracksRepository {
         null,
         null,
       );
-      return TrackAudioFeaturesModel.fromJson(trackAudioFeaturesResponse);
+      return Status.success(
+          data: TrackAudioFeaturesModel.fromJson(trackAudioFeaturesResponse));
     } catch (e) {
-      return TrackAudioFeaturesModel();
+      return Status.error();
     }
   }
 

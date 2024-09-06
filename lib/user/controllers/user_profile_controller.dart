@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tmoose/helpers/logger.dart';
 import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/user/helper/enums.dart';
 import 'package:tmoose/artists/models/artist_model.dart';

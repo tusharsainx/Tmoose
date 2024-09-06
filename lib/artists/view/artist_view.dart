@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:tmoose/artists/controller/artist_view_controller.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/bottomsheets/artist_related_artists_bottomsheet.dart';
-import 'package:tmoose/helpers/artist_page_helper.dart';
+import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
 import 'package:tmoose/helpers/status.dart';
@@ -220,8 +220,10 @@ class ArtistPage extends StatelessWidget {
                                           i++) ...[
                                         GestureDetector(
                                           onTap: () async {
+                                            TrackPageHelper.setUniqueId();
                                             await Get.toNamed(
                                               AppRoutes.track,
+                                              preventDuplicates: false,
                                               arguments: controller
                                                       .artistTopTracksModel
                                                       .value
