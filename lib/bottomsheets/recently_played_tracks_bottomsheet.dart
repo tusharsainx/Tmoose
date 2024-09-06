@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/helpers/colors.dart';
+import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
@@ -65,8 +66,10 @@ class RecentlyPlayedTracksBottomsheet {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
+                                  TrackPageHelper.setUniqueId();
                                   Get.toNamed(
                                     AppRoutes.track,
+                                    preventDuplicates: false,
                                     arguments: controller
                                             .recentlyPlayedTracksModel
                                             .value

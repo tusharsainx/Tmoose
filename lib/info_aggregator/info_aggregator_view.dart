@@ -7,6 +7,7 @@ import 'package:tmoose/artists/controller/artist_view_controller.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
 import 'package:tmoose/helpers/colors.dart';
+import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
 import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/routes/app_routes.dart';
@@ -88,10 +89,14 @@ class InfoAggregatorView extends StatelessWidget {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () => Get.toNamed(AppRoutes.track,
-                        arguments: artistViewController.artistTopTracksModel
-                                .value.data?.tracks?[index] ??
-                            TrackModel()),
+                    onTap: () {
+                      TrackPageHelper.setUniqueId();
+                      Get.toNamed(AppRoutes.track,
+                          preventDuplicates: false,
+                          arguments: artistViewController.artistTopTracksModel
+                                  .value.data?.tracks?[index] ??
+                              TrackModel());
+                    },
                     child: Padding(
                       padding: const EdgeInsets.only(
                         left: 10,
@@ -434,10 +439,14 @@ class InfoAggregatorView extends StatelessWidget {
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return GestureDetector(
-                                onTap: () => Get.toNamed(AppRoutes.track,
-                                    arguments: userProfileController.topTracks
-                                            .value.data?.tracks?[index] ??
-                                        TrackModel()),
+                                onTap: () {
+                                  TrackPageHelper.setUniqueId();
+                                  Get.toNamed(AppRoutes.track,
+                                      preventDuplicates: false,
+                                      arguments: userProfileController.topTracks
+                                              .value.data?.tracks?[index] ??
+                                          TrackModel());
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                     left: 10,
@@ -549,10 +558,14 @@ class InfoAggregatorView extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: () => Get.toNamed(AppRoutes.artist,
-                                  arguments: userProfileController.topArtists
-                                          .value.data?.artists?[index] ??
-                                      ArtistModel()),
+                              onTap: () {
+                                ArtistPageHelper.setUniqueId();
+                                Get.toNamed(AppRoutes.artist,
+                                    preventDuplicates: false,
+                                    arguments: userProfileController.topArtists
+                                            .value.data?.artists?[index] ??
+                                        ArtistModel());
+                              },
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                   left: 10,

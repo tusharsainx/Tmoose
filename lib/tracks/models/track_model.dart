@@ -26,26 +26,27 @@ class TrackModel {
     this.trackPopularity,
   });
   factory TrackModel.fromJson(Map<String, dynamic>? json) {
-    final trackId = json?["id"];
-    final previewUrl = json?["preview_url"];
-    final trackSpotifyLink = json?["external_urls"]?["spotify"];
+    if (json == null) return TrackModel();
+    final trackId = json["id"];
+    final previewUrl = json["preview_url"];
+    final trackSpotifyLink = json["external_urls"]?["spotify"];
     String backgroundImage = "";
-    final images = json?["album"]?["images"];
+    final images = json["album"]?["images"];
     if (images != null && (images is List)) {
       if (images.isNotEmpty) backgroundImage = (images[0]?["url"]) ?? "";
     }
-    final artists = json?["artists"];
+    final artists = json["artists"];
     final artistModels = <ArtistModelBase>[];
-    final album = AlbumModel.fromJson(json?["album"]);
+    final album = AlbumModel.fromJson(json["album"]);
     if (artists != null) {
       for (int i = 0; i < artists.length; i++) {
         artistModels.add(ArtistModelBase.fromJson(artists[i]));
       }
     }
-    final trackPopularity = json?["popularity"];
-    final trackName = json?["name"];
+    final trackPopularity = json["popularity"];
+    final trackName = json["name"];
     try {
-      final trackDuration = json?["duration_ms"];
+      final trackDuration = json["duration_ms"];
       return TrackModel(
         album: album,
         trackId: trackId,

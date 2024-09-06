@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:tmoose/helpers/colors.dart';
+import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
 import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/routes/app_routes.dart';
@@ -13,34 +16,24 @@ class CurrentPlayingTrackView extends GetView<UserProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text(
-          "Currently playing",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Obx(
-          () {
-            switch (controller.currentPlayingTrackModel.value.apiStatus) {
-              case ApiStatus.loading:
-                return const _Loading();
-              case ApiStatus.success:
-                return const _Loaded();
-              case ApiStatus.error:
-                return GenericInfo(
-                  text: "Something went wrong",
-                  height: 50,
-                  width: double.infinity,
-                  onTap: controller.fetchCurrentlyPlayingTrack,
-                );
-              case ApiStatus.none:
-                return const SizedBox();
-            }
-          },
-        ),
-      ],
+    return Obx(
+      () {
+        switch (controller.currentPlayingTrackModel.value.apiStatus) {
+          case ApiStatus.loading:
+            return const _Loading();
+          case ApiStatus.success:
+            return const _Loaded();
+          case ApiStatus.error:
+            return GenericInfo(
+              text: "Something went wrong",
+              height: 50,
+              width: double.infinity,
+              onTap: controller.fetchCurrentlyPlayingTrack,
+            );
+          case ApiStatus.none:
+            return const SizedBox();
+        }
+      },
     );
   }
 }
@@ -92,7 +85,9 @@ class _Loaded extends StatelessWidget {
           const SizedBox(height: 10),
           GestureDetector(
             onTap: () {
+              TrackPageHelper.setUniqueId();
               Get.toNamed(AppRoutes.track,
+                  preventDuplicates: false,
                   arguments: (controller.currentPlayingTrackModel.value.data ??
                       CurrentPlayingTrackModel()));
             },

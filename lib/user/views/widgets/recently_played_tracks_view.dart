@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/bottomsheets/recently_played_tracks_bottomsheet.dart';
+import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
 import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/routes/app_routes.dart';
@@ -128,7 +129,12 @@ class _Loaded extends StatelessWidget {
                 controller.recentlyPlayedTracksModel.value.data?.tracks?[index];
             return GestureDetector(
               onTap: () {
-                Get.toNamed(AppRoutes.track, arguments: track ?? TrackModel());
+                TrackPageHelper.setUniqueId();
+                Get.toNamed(
+                  AppRoutes.track,
+                  preventDuplicates: false,
+                  arguments: track ?? TrackModel(),
+                );
               },
               child: Row(
                 children: [

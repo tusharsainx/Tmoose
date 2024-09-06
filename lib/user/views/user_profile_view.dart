@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
+import 'package:tmoose/helpers/colors.dart';
 import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/user/controllers/user_profile_controller.dart';
@@ -237,17 +238,64 @@ class UserProfileView extends StatelessWidget {
                       const SizedBox(height: 15),
                       const TopArtistsView(),
                       Obx(() {
-                        if (controller.isAnySongCurrentlyPlaying.value) {
-                          return const Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CurrentPlayingTrackView(),
-                              SizedBox(height: 20),
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Currently playing",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                GestureDetector(
+                                  onTap: () =>
+                                      controller.fetchCurrentlyPlayingTrack(),
+                                  child: const Row(
+                                    children: [
+                                      Text(
+                                        "Refresh",
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Icon(
+                                        color: kAppHeroColor,
+                                        FontAwesomeIcons.rotateRight,
+                                        size: 16,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (controller.isAnySongCurrentlyPlaying.value) ...[
+                              const CurrentPlayingTrackView(),
+                              const SizedBox(height: 20),
                             ],
-                          );
-                        }
-                        return const SizedBox();
+                            if (!controller
+                                .isAnySongCurrentlyPlaying.value) ...[
+                              const SizedBox(height: 10),
+                              const SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: Text(
+                                  "No song currently playing",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey),
+                                ),
+                              ),
+                            ],
+                          ],
+                        );
                       }),
                       const TopTracksView(),
                       const SizedBox(height: 20),

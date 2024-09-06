@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/artists/controller/artist_view_controller.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
-import 'package:tmoose/helpers/artist_page_helper.dart';
+import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/helpers/colors.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/user/helper/something_went_wrong.dart';

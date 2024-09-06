@@ -5,19 +5,24 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
+import 'package:tmoose/artists/repository/artist_repository.dart';
+import 'package:tmoose/helpers/status.dart';
 import 'package:tmoose/tracks/models/track_model.dart';
 import 'package:tmoose/tracks/repository/tracks_repository.dart';
 
 class TrackPageController extends GetxController with WidgetsBindingObserver {
-  TrackAudioFeaturesModel? trackAudioFeaturesModel;
-  final isDataLoading = true.obs;
+  Rx<Status<TrackAudioFeaturesModel>> trackAudioFeaturesModel =
+      Status<TrackAudioFeaturesModel>.loading().obs;
   final TracksRepository _tracksRepository = TracksRepository();
+  final ArtistsRepository _artistsRepository = ArtistsRepository();
   final isAudioLoading = false.obs;
   final scrollController = ScrollController();
   final isSongPlayed = false.obs;
   final audioPlayer = AudioPlayer();
   final duration = Duration.zero.obs;
   final position = Duration.zero.obs;
+  Rx<Status<List<ArtistModel>>> artistModels =
+      Status<List<ArtistModel>>.loading().obs;
   StreamSubscription? onDurationChanged;
   StreamSubscription? onPositionChanged;
   StreamSubscription? onPlayerComplete;
@@ -25,7 +30,27 @@ class TrackPageController extends GetxController with WidgetsBindingObserver {
   @override
   void onInit() {
     init();
+
     super.onInit();
+  }
+
+  void fetchArtistData() async {
+    artistModels.value = Status.loading();
+    List<ArtistModel> artistsCompleteList = [];
+    List<ArtistModelBase> artists = trackModel.artists ?? [];
+    for (int i = 0; i < artists.length && i < 5; i++) {
+      await _artistsRepository
+          .getArtistInfo(artistId: artists[i].artistId ?? "")
+          .then((value) {
+        if (value.imageUrl != null && (value.imageUrl ?? "").isNotEmpty) {
+          artistsCompleteList.add(value);
+        }
+      });
+    }
+    artistModels.value = Status.success(
+      data: artistsCompleteList,
+    );
+    return;
   }
 
   @override
@@ -45,28 +70,26 @@ class TrackPageController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  Future<void> init() async {
-    isDataLoading(true);
+  void init() {
     WidgetsBinding.instance.addObserver(this);
     if (Get.arguments is CurrentPlayingTrackModel) {
       trackModel = Get.arguments as CurrentPlayingTrackModel;
     } else {
       trackModel = Get.arguments as TrackModel;
     }
-
-    await fetchTrackAudioFeatures(trackId: trackModel?.trackId);
+    fetchTrackAudioFeatures(trackId: trackModel?.trackId);
+    fetchArtistData();
     onDurationChanged = audioPlayer.onDurationChanged.listen((event) {
       duration.value = event;
     });
     onPositionChanged = audioPlayer.onPositionChanged.listen((event) {
       position.value = event;
     });
-    onPlayerComplete = audioPlayer.onPlayerComplete.listen((event) async {
+    onPlayerComplete = audioPlayer.onPlayerComplete.listen((event) {
       position.value = Duration.zero;
       isAudioLoading.value = false;
       isSongPlayed.value = false;
     });
-    isDataLoading(false);
   }
 
   @override
@@ -115,11 +138,12 @@ class TrackPageController extends GetxController with WidgetsBindingObserver {
   }
 
   Future fetchTrackAudioFeatures({required String? trackId}) async {
+    trackAudioFeaturesModel.value = Status.loading();
     if (trackId == null) {
       Get.snackbar(
           "Page not found", "Unfortunately requested page is not available");
     } else {
-      trackAudioFeaturesModel =
+      trackAudioFeaturesModel.value =
           await _tracksRepository.findTrackAudioAnalysis(trackId: trackId);
     }
     return;
