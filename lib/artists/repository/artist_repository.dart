@@ -7,6 +7,21 @@ import 'package:tmoose/tracks/models/track_model.dart';
 
 class ArtistsRepository {
   final NetworkRequester _networkRequester = NetworkRequester();
+  Future<ArtistModel> getArtistInfo({required String artistId}) async {
+    try {
+      final artistModel = await _networkRequester.request(
+        Api.baseUrl,
+        "${Api.getArtistInfo}/$artistId",
+        MethodType.GET.name,
+        null,
+        null,
+      );
+      return ArtistModel.fromJson(artistModel);
+    } catch (e) {
+      return ArtistModel();
+    }
+  }
+
   Future<Status<ArtistAlbumsModel>> fetchArtistAlbums({
     required String artistId,
     required int limit,
