@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
@@ -21,9 +22,34 @@ class TopTracksView extends GetView<UserProfileController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Top tracks",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                const Text(
+                  "Top tracks",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    if (controller.topTracks.value.apiStatus ==
+                        ApiStatus.success) {
+                      MusicPlayerHelper.setUniqueId();
+                      Get.toNamed(
+                        AppRoutes.musicPlayer,
+                        arguments: controller.topTracks.value.data ??
+                            UserTopTracksModel(),
+                      );
+                    }
+                  },
+                  child: const Icon(
+                    FontAwesomeIcons.play,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                )
+              ],
             ),
             GestureDetector(
               onTap: () {

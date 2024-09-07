@@ -4,4 +4,5 @@ class AppRoutes {
   static String userProfile = "/user_profile";
   static String track = "/track";
   static String artist = "/artist";
+  static String musicPlayer = "/music_player";
 }

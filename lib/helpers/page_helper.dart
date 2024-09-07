@@ -13,3 +13,10 @@ class TrackPageHelper {
     uniqueid = const Uuid().v4();
   }
 }
+
+class MusicPlayerHelper {
+  static String uniqueid = "0";
+  static void setUniqueId() {
+    uniqueid = const Uuid().v4();
+  }
+}

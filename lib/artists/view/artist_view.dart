@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:tmoose/artists/controller/artist_view_controller.dart';
 import 'package:tmoose/artists/models/artist_model.dart';
 import 'package:tmoose/bottomsheets/artist_related_artists_bottomsheet.dart';
+import 'package:tmoose/helpers/colors.dart';
 import 'package:tmoose/helpers/page_helper.dart';
 import 'package:tmoose/helpers/assets_helper.dart';
 import 'package:tmoose/helpers/shimmer_widgets.dart';
@@ -37,6 +38,32 @@ class ArtistPage extends StatelessWidget {
             pinned: true,
             expandedHeight: Get.height * 0.5,
             flexibleSpace: FlexibleSpaceBar(
+              titlePadding: EdgeInsets.only(left: Get.width*0.8,bottom: 10),
+              title: GestureDetector(
+                onTap: () {
+                  if (controller.artistTopTracksModel.value.apiStatus ==
+                      ApiStatus.success) {
+                    MusicPlayerHelper.setUniqueId();
+                    Get.toNamed(AppRoutes.musicPlayer,
+                        arguments: controller.artistTopTracksModel.value.data ??
+                            ArtistTopTracksModel());
+                  }
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(1000),
+                  child: const ColoredBox(
+                    color: kAppHeroColor,
+                    child: SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: Icon(
+                        FontAwesomeIcons.play,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               background: CachedNetworkImage(
                 imageUrl: controller.artistModel?.imageUrl ?? "",
                 errorWidget: (context, url, error) => FullDeviceWidthShimmer(

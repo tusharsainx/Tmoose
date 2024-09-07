@@ -6,6 +6,8 @@ import 'package:tmoose/authentication/middleware/auth_middleware.dart';
 import 'package:tmoose/authentication/views/auth_view.dart';
 import 'package:tmoose/home/bindings/home_binding.dart';
 import 'package:tmoose/home/views/home_view.dart';
+import 'package:tmoose/music_player/binding/music_player_binding.dart';
+import 'package:tmoose/music_player/view/music_player_view.dart';
 import 'package:tmoose/routes/app_routes.dart';
 import 'package:tmoose/tracks/binding/track_view_binding.dart';
 import 'package:tmoose/tracks/view/tracks_view.dart';
@@ -33,5 +35,10 @@ class AppPages {
       page: () => const ArtistPage(),
       binding: ArtistViewBinding(),
     ),
+    GetPage(
+      name: AppRoutes.musicPlayer,
+      page: () => const MusicPlayerView(),
+      binding: MusicPlayerBinding(),
+    )
   ];
 }
