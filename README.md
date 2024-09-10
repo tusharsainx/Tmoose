@@ -4,5 +4,5 @@ Application that aggregate your spotify profile into one place, shows you your t
 
 <H2>Authentication/Authorization Screen</H2>
 
-![alt text](https://drive.google.com/file/d/1z06cqHbXCtWyGJ4IGS7ee4lnn1tgF-oQ/view?usp=drivesdk)
+![alt text](https://drive.google.com/file/d/1z06cqHbXCtWyGJ4IGS7ee4lnn1tgF-oQ/view)
 
