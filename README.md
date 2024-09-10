@@ -6,6 +6,10 @@ Application that aggregate your spotify profile into one place, shows you your t
 
 
 
+https://github.com/user-attachments/assets/1a007c51-afb1-4d41-b299-e5f3f1e6dae6
+
+
+
 
 <h2>Authentication/Authorization Screen</h2>
 
