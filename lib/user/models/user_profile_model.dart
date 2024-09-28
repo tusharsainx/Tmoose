@@ -3,7 +3,9 @@ class UserProfileModel {
   String? image;
   String? userSpotifyProfile;
   String? followers;
+  String? id;
   UserProfileModel({
+    this.id,
     this.followers,
     this.image,
     this.name,
@@ -21,6 +23,7 @@ class UserProfileModel {
       image: backgroundImage,
       userSpotifyProfile: json["external_urls"]?["spotify"],
       followers: json["followers"]?["total"]?.toString(),
+      id: json["id"],
     );
   }
 }

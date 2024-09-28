@@ -16,74 +16,99 @@ class MusicPlayerView extends StatelessWidget {
   Widget build(BuildContext context) {
     MusicPlayerController controller =
         Get.find<MusicPlayerController>(tag: MusicPlayerHelper.uniqueid);
-    return Scaffold(
-      backgroundColor: kAppScaffoldBackgroundColor,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "T.Moose",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.grey,
-                ),
+    return Obx(() {
+      return controller.isTracksEmptyOrNull.value
+          ? const Scaffold(
+              backgroundColor: Colors.black,
+              body: Center(
+                child: Text("No tracks found",
+                    style: TextStyle(color: Colors.grey)),
               ),
-              SizedBox(
-                height: Get.height * 0.05,
-              ),
-              SizedBox(
-                height: Get.height * 0.35,
-                width: Get.width,
-                child: PageView(
-                  controller: controller.pageController,
-                  onPageChanged: (index) {
-                    if (controller.isPageChangedByButtonPress == false) {
-                      controller.isPageChangedBySwiping = true;
-                    }
-                    if (controller.isPageChangedBySwiping) {
-                      if (index > controller.trackNo.value) {
-                        controller.nextSong();
-                      } else {
-                        controller.previousSong();
-                      }
-                    }
-                    controller.isPageChangedByButtonPress = false;
-                    controller.isPageChangedBySwiping = false;
-                  },
-                  children: [
-                    for (int i = 0;
-                        i <
-                            (controller.playableTracks.value.data!.tracks ?? [])
-                                .length;
-                        i++) ...[
-                      TrackImageWidget(
-                        index: i,
-                      ),
+            )
+          : Scaffold(
+              body: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.grey,
+                      kAppBoxBackgroundColor,
+                      Colors.black,
                     ],
-                  ],
+                  ),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "T.Moose",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.05,
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.35,
+                          width: Get.width,
+                          child: PageView(
+                            controller: controller.pageController,
+                            onPageChanged: (index) {
+                              if (controller.isPageChangedByButtonPress ==
+                                  false) {
+                                controller.isPageChangedBySwiping = true;
+                              }
+                              if (controller.isPageChangedBySwiping) {
+                                if (index > controller.trackNo.value) {
+                                  controller.nextSong();
+                                } else {
+                                  controller.previousSong();
+                                }
+                              }
+                              controller.isPageChangedByButtonPress = false;
+                              controller.isPageChangedBySwiping = false;
+                            },
+                            children: [
+                              for (int i = 0;
+                                  i <
+                                      (controller.playableTracks.value.data!
+                                                  .tracks ??
+                                              [])
+                                          .length;
+                                  i++) ...[
+                                TrackImageWidget(
+                                  index: i,
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.08,
+                        ),
+                        const _TrackNameArtistNameRowWidget(),
+                        SizedBox(
+                          height: Get.height * 0.04,
+                        ),
+                        const _TrackTimelineWidget(),
+                        SizedBox(
+                          height: Get.height * 0.06,
+                        ),
+                        const _FrontbackPlayPauseWidget(),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(
-                height: Get.height * 0.08,
-              ),
-              const _TrackNameArtistNameRowWidget(),
-              SizedBox(
-                height: Get.height * 0.04,
-              ),
-              const _TrackTimelineWidget(),
-              SizedBox(
-                height: Get.height * 0.06,
-              ),
-              const _FrontbackPlayPauseWidget(),
-            ],
-          ),
-        ),
-      ),
-    );
+            );
+    });
   }
 }
 
@@ -100,15 +125,15 @@ class TrackImageWidget extends StatelessWidget {
           "",
       placeholder: (context, url) => SizedBoxShimmer(
         height: Get.height * 0.35,
-        width: Get.width * 0.7,
+        width: Get.height * 0.35,
       ),
       errorWidget: (context, url, error) => SizedBox(
         height: Get.height * 0.35,
-        width: Get.width * 0.7,
+        width: Get.height * 0.35,
       ),
       imageBuilder: (context, imageProvider) => Container(
         height: Get.height * 0.35,
-        width: Get.width * 0.7,
+        width: Get.height * 0.35,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: imageProvider,
