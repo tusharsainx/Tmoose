@@ -25,6 +25,7 @@ class MusicPlayerController extends GetxController {
   StreamSubscription? onPlayerCompleted;
   final duration = Duration.zero.obs;
   final position = Duration.zero.obs;
+  final isTracksEmptyOrNull = false.obs;
   @override
   void onInit() {
     init();
@@ -45,12 +46,16 @@ class MusicPlayerController extends GetxController {
       position.value = data;
     });
     final tracksToPlay = Get.arguments;
-    playableTracks.value = Status.success(
-      data: PlayableTracksList.fromTracks(
-        tracksToPlay.tracks,
-      ),
-    );
-    playPause();
+    if (tracksToPlay.tracks == null || tracksToPlay.tracks.isEmpty) {
+      isTracksEmptyOrNull(true);
+    } else {
+      playableTracks.value = Status.success(
+        data: PlayableTracksList.fromTracks(
+          tracksToPlay.tracks,
+        ),
+      );
+      playPause();
+    }
   }
 
   String getArtistNames(List<ArtistModelBase>? artists) {

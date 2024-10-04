@@ -22,9 +22,34 @@ class RecentlyPlayedTracksView extends GetView<UserProfileController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Recently played",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                const Text(
+                  "Recently played",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    if (controller.recentlyPlayedTracksModel.value.apiStatus ==
+                        ApiStatus.success) {
+                      MusicPlayerHelper.setUniqueId();
+                      Get.toNamed(
+                        AppRoutes.musicPlayer,
+                        arguments: controller.recentlyPlayedTracksModel.value.data ??
+                            RecentlyPlayedTracksModel(),
+                      );
+                    }
+                  },
+                  child: const Icon(
+                    FontAwesomeIcons.play,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                )
+              ],
             ),
             GestureDetector(
               onTap: () async {
